@@ -18,6 +18,14 @@ const other = {
       icon: icons.IconUsers,
       breadcrumbs: false
     },
+    {
+      id: 'lead',
+      title: 'Lead',
+      type: 'item',
+      url: '/lead',
+      icon: icons.IconUsers,
+      breadcrumbs: false
+    }
   ]
 };
 

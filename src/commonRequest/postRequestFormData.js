@@ -3,7 +3,7 @@ import config from '../config';
 import authHeader from 'services/auth-header';
 var API_URL = config.backendUrl;
 
-const PostRequest = async (url, data) => {
+const PostRequestFormData = async (url, data) => {
   try {
     const response = await axios.post(API_URL + url, data, { headers: authHeader() });
 
@@ -15,4 +15,4 @@ const PostRequest = async (url, data) => {
   }
 };
 
-export default PostRequest;
+export default PostRequestFormData;

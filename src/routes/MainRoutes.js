@@ -7,18 +7,16 @@ import Loadable from 'ui-component/Loadable';
 // dashboard routing
 const DashboardDefault = Loadable(lazy(() => import('views/dashboard/Default')));
 
-// utilities routing
-const UtilsTypography = Loadable(lazy(() => import('views/utilities/Typography')));
-const UtilsColor = Loadable(lazy(() => import('views/utilities/Color')));
-const UtilsShadow = Loadable(lazy(() => import('views/utilities/Shadow')));
-const UtilsMaterialIcons = Loadable(lazy(() => import('views/utilities/MaterialIcons')));
-const UtilsTablerIcons = Loadable(lazy(() => import('views/utilities/TablerIcons')));
 
 // sample page routing
 const Profile = Loadable(lazy(() => import('views/Profile/index')));
 
 const Staff = Loadable(lazy(() => import('views/staff/index')));
 const AddStaff = Loadable(lazy(() => import('views/staff/AddStaff')));
+const BranchLocation = Loadable(lazy(() => import('views/settings/branchLocation/index')));
+const AddEditBranchLocation = Loadable(lazy(() => import('views/settings/branchLocation/AddBranchLocation')));
+const Lead = Loadable(lazy(() => import('views/lead/index')));
+const AddEditLead = Loadable(lazy(() => import('views/lead/addLead')));
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -57,47 +55,38 @@ const MainRoutes = {
       ]
     },
     {
-      path: 'utils',
+      path: 'setting/branchlocation',
       children: [
         {
-          path: 'util-typography',
-          element: <UtilsTypography />
+          path: '',
+          element: <BranchLocation />
         }
       ]
     },
     {
-      path: 'utils',
+      path: 'setting/branchlocation',
       children: [
         {
-          path: 'util-color',
-          element: <UtilsColor />
+          path: 'addbranchlocation',
+          element: <AddEditBranchLocation />
         }
       ]
     },
     {
-      path: 'utils',
+      path: 'lead',
       children: [
         {
-          path: 'util-shadow',
-          element: <UtilsShadow />
+          path: '',
+          element: <Lead />
         }
       ]
     },
     {
-      path: 'icons',
+      path: 'lead',
       children: [
         {
-          path: 'tabler-icons',
-          element: <UtilsTablerIcons />
-        }
-      ]
-    },
-    {
-      path: 'icons',
-      children: [
-        {
-          path: 'material-icons',
-          element: <UtilsMaterialIcons />
+          path: 'addeditstaff',
+          element: <AddEditLead />
         }
       ]
     },

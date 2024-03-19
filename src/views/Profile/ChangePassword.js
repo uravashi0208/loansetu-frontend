@@ -18,18 +18,10 @@ import axios from 'axios';
 const ChangePassword = () => {
     const [userData, setUserData] = useState([]);
     useEffect(() => {
-        const fetchUserData = async () => {
-            try {
-                if (localStorage.getItem("token")) {
-                const tokenValue = localStorage.getItem("token");
-                setUserData(JSON.parse(tokenValue));
-                }
-            } catch (error) {
-                console.error('Error fetching user data:', error);
-            }
-        };
-
-    fetchUserData();
+      if (localStorage.getItem('token')) {
+        const tokenValue = localStorage.getItem('token');
+        setUserData(JSON.parse(tokenValue));
+      }
     }, []); 
 
     const initialValues = {

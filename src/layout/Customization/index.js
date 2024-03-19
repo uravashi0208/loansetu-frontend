@@ -55,11 +55,7 @@ const Customization = () => {
 
   useEffect(() => {
     if(!localStorage.getItem("token")){
-      navigate("/login");
-    }
-    else
-    {
-      navigate("/dashboard");
+      navigate('/login');
     }
     dispatch({ type: SET_BORDER_RADIUS, borderRadius });
   }, [dispatch, borderRadius]);
