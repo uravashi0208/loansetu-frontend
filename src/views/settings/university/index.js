@@ -15,21 +15,27 @@ import { useAlert } from 'ui-component/alert/alert';
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
-const BranchLocation = () => {
-  const [branchLocationData, setBranchLocationData] = useState([]);
+const University = () => {
+  const [universityData, setUniversityData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const columns = [
     { field: 'id', headerName: 'ID', width: 100, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'location_name',
-      headerName: 'Location name',
+      field: 'country_name',
+      headerName: 'Country name',
       width: 300,
       sortable: false,
-      valueGetter: (params) => `${params.row.location_name || ''}`
+      valueGetter: (params) => `${params.row.country_name || ''}`
     },
-    { field: 'status', headerName: 'Status', width: 200 },
+    {
+      field: 'university_name',
+      headerName: 'University name',
+      width: 300,
+      sortable: false,
+      valueGetter: (params) => `${params.row.university_name || ''}`
+    },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -67,24 +73,19 @@ const BranchLocation = () => {
   ];
 
   useEffect(() => {
-    getAllBranchLocation();
+    getAllUniversity();
   }, []);
 
-  const getAllBranchLocation = async () => {
-    const response = await GetRequest('/branchlocation/getbranchlocation');
+  const getAllUniversity = async () => {
+    const response = await GetRequest('/university/getuniversity');
     if (response.data) {
-      const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.status }));
-      setBranchLocationData(modifiedData);
+      const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
+      setUniversityData(modifiedData);
     }
   };
 
-  const getStatusText = (status) => (status ? 'Active' : 'Inactive');
-  const columnsWithStatusText = columns.map((col) =>
-    col.field === 'status' ? { ...col, valueGetter: (params) => getStatusText(params.row.status) } : col
-  );
-
   const handleEdit = async (id) => {
-    navigate('/setting/branchlocation/addbranchlocation', { state: id });
+    navigate('/setting/university/adduniversity', { state: id });
   };
 
   const handleDelete = (id) => {
@@ -98,11 +99,11 @@ const BranchLocation = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await DeleteRequest('/branchlocation/deletelocation/', id);
+        const response = await DeleteRequest('/university/deleteuniversity/', id);
         if (response.response == true) {
           showAlert(response.message, 'success');
           setTimeout(() => {
-            getAllBranchLocation();
+            getAllUniversity();
             setLoading(false);
           }, 1000);
         } else {
@@ -118,9 +119,9 @@ const BranchLocation = () => {
     <>
       <Grid container>
         <Grid item xs={12}>
-          <MainCard title={'Branch Location'} subtitle={true} buttonname={'Add New Branch Location'} redirectlink={'addbranchlocation'}>
+          <MainCard title={'University'} subtitle={true} buttonname={'Add New University'} redirectlink={'adduniversity'}>
             <Box sx={{ width: '100%', typography: 'subtitle1' }}>
-              <CommonTable rows={branchLocationData} columns={columnsWithStatusText} isloading={loading} />
+              <CommonTable rows={universityData} columns={columns} isloading={loading} />
             </Box>
           </MainCard>
         </Grid>
@@ -130,4 +131,4 @@ const BranchLocation = () => {
   );
 };
 
-export default BranchLocation;
+export default University;

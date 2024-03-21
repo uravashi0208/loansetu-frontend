@@ -17,6 +17,13 @@ const BranchLocation = Loadable(lazy(() => import('views/settings/branchLocation
 const AddEditBranchLocation = Loadable(lazy(() => import('views/settings/branchLocation/AddBranchLocation')));
 const Lead = Loadable(lazy(() => import('views/lead/index')));
 const AddEditLead = Loadable(lazy(() => import('views/lead/addLead')));
+const LeadStatus = Loadable(lazy(() => import('views/settings/leadStatus/index')));
+const AddEditLeadStatus = Loadable(lazy(() => import('views/settings/leadStatus/AddLeadStatus')));
+const University = Loadable(lazy(() => import('views/settings/university/index')));
+const AddEditUniversity = Loadable(lazy(() => import('views/settings/university/AddUniversity')));
+const CourseType = Loadable(lazy(() => import('views/settings/coursetype/index')));
+const AddEditCourseType = Loadable(lazy(() => import('views/settings/coursetype/AddCourseType')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -85,7 +92,7 @@ const MainRoutes = {
       path: 'lead',
       children: [
         {
-          path: 'addeditstaff',
+          path: 'addeditlead',
           element: <AddEditLead />
         }
       ]
@@ -93,6 +100,60 @@ const MainRoutes = {
     {
       path: 'profile',
       element: <Profile />
+    },
+    {
+      path: 'setting/leadstatus',
+      children: [
+        {
+          path: '',
+          element: <LeadStatus />
+        }
+      ]
+    },
+    {
+      path: 'setting/leadstatus',
+      children: [
+        {
+          path: 'addleadstatus',
+          element: <AddEditLeadStatus />
+        }
+      ]
+    },
+    {
+      path: 'setting/university',
+      children: [
+        {
+          path: '',
+          element: <University />
+        }
+      ]
+    },
+    {
+      path: 'setting/university',
+      children: [
+        {
+          path: 'adduniversity',
+          element: <AddEditUniversity />
+        }
+      ]
+    },
+    {
+      path: 'setting/coursetype',
+      children: [
+        {
+          path: '',
+          element: <CourseType />
+        }
+      ]
+    },
+    {
+      path: 'setting/coursetype',
+      children: [
+        {
+          path: 'addcoursetype',
+          element: <AddEditCourseType />
+        }
+      ]
     }
   ]
 };

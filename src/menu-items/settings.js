@@ -1,9 +1,11 @@
 // assets
-import { IconLocation } from '@tabler/icons-react';
+import { IconLocation, IconStatusChange, IconBackpack } from '@tabler/icons-react';
 
 // constant
 const icons = {
-  IconLocation
+  IconLocation,
+  IconStatusChange,
+  IconBackpack
 };
 
 // ==============================|| SETTINGS MENU ITEMS ||============================== //
@@ -14,11 +16,35 @@ const settings = {
   type: 'group',
   children: [
     {
-      id: 'branchlocations',
+      id: 'branchlocation',
       title: 'Branch Location',
       type: 'item',
       url: '/setting/branchlocation',
       icon: icons.IconLocation,
+      breadcrumbs: false
+    },
+    {
+      id: 'leadstatus',
+      title: 'Lead Status',
+      type: 'item',
+      url: '/setting/leadstatus',
+      icon: icons.IconStatusChange,
+      breadcrumbs: false
+    },
+    {
+      id: 'university',
+      title: 'University',
+      type: 'item',
+      url: '/setting/university',
+      icon: icons.IconBackpack,
+      breadcrumbs: false
+    },
+    {
+      id: 'coursetype',
+      title: 'Course Type',
+      type: 'item',
+      url: '/setting/coursetype',
+      icon: icons.IconBackpack,
       breadcrumbs: false
     }
   ]

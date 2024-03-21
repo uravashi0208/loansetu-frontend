@@ -1,8 +1,8 @@
 // assets
-import { IconUsers, IconHelp } from '@tabler/icons-react';
+import { IconUsers, IconLadder } from '@tabler/icons-react';
 
 // constant
-const icons = { IconUsers, IconHelp };
+const icons = { IconUsers, IconLadder };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -23,7 +23,7 @@ const other = {
       title: 'Lead',
       type: 'item',
       url: '/lead',
-      icon: icons.IconUsers,
+      icon: icons.IconLadder,
       breadcrumbs: false
     }
   ]

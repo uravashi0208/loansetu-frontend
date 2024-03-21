@@ -15,25 +15,24 @@ import { useAlert } from 'ui-component/alert/alert';
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
-const BranchLocation = () => {
-  const [branchLocationData, setBranchLocationData] = useState([]);
+const CourseType = () => {
+  const [courseTypeData, setCourseTypeData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const columns = [
     { field: 'id', headerName: 'ID', width: 100, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'location_name',
-      headerName: 'Location name',
+      field: 'course_type_name',
+      headerName: 'Course Type',
       width: 300,
       sortable: false,
-      valueGetter: (params) => `${params.row.location_name || ''}`
+      valueGetter: (params) => `${params.row.course_type_name || ''}`
     },
-    { field: 'status', headerName: 'Status', width: 200 },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 200,
+      width: 300,
       sortable: false,
       renderCell: (params) => (
         <>
@@ -67,24 +66,19 @@ const BranchLocation = () => {
   ];
 
   useEffect(() => {
-    getAllBranchLocation();
+    getAllCourseType();
   }, []);
 
-  const getAllBranchLocation = async () => {
-    const response = await GetRequest('/branchlocation/getbranchlocation');
+  const getAllCourseType = async () => {
+    const response = await GetRequest('/coursetype/getcoursetype');
     if (response.data) {
-      const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.status }));
-      setBranchLocationData(modifiedData);
+      const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
+      setCourseTypeData(modifiedData);
     }
   };
 
-  const getStatusText = (status) => (status ? 'Active' : 'Inactive');
-  const columnsWithStatusText = columns.map((col) =>
-    col.field === 'status' ? { ...col, valueGetter: (params) => getStatusText(params.row.status) } : col
-  );
-
   const handleEdit = async (id) => {
-    navigate('/setting/branchlocation/addbranchlocation', { state: id });
+    navigate('/setting/coursetype/addcoursetype', { state: id });
   };
 
   const handleDelete = (id) => {
@@ -98,11 +92,11 @@ const BranchLocation = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await DeleteRequest('/branchlocation/deletelocation/', id);
+        const response = await DeleteRequest('/coursetype/deletecoursetype/', id);
         if (response.response == true) {
           showAlert(response.message, 'success');
           setTimeout(() => {
-            getAllBranchLocation();
+            getAllCourseType();
             setLoading(false);
           }, 1000);
         } else {
@@ -118,9 +112,9 @@ const BranchLocation = () => {
     <>
       <Grid container>
         <Grid item xs={12}>
-          <MainCard title={'Branch Location'} subtitle={true} buttonname={'Add New Branch Location'} redirectlink={'addbranchlocation'}>
+          <MainCard title={'Course Type'} subtitle={true} buttonname={'Add New Course Type'} redirectlink={'addcoursetype'}>
             <Box sx={{ width: '100%', typography: 'subtitle1' }}>
-              <CommonTable rows={branchLocationData} columns={columnsWithStatusText} isloading={loading} />
+              <CommonTable rows={courseTypeData} columns={columns} isloading={loading} />
             </Box>
           </MainCard>
         </Grid>
@@ -130,4 +124,4 @@ const BranchLocation = () => {
   );
 };
 
-export default BranchLocation;
+export default CourseType;

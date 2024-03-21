@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -23,7 +24,6 @@ import * as Yup from 'yup';
 import { Formik } from 'formik';
 
 // project imports
-import useScriptRef from 'hooks/useScriptRef';
 import AnimateButton from 'ui-component/extended/AnimateButton';
 import { strengthColor, strengthIndicator } from 'utils/password-strength';
 
@@ -32,21 +32,22 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import config from '../../../../config';
 import axios from 'axios';
-import Swal from "sweetalert2";
 import { Link, useNavigate } from 'react-router-dom';
+import { useAlert } from 'ui-component/alert/alert';
 
 // ===========================|| FIREBASE - REGISTER ||=========================== //
 
 const FirebaseRegister = ({ ...others }) => {
   const theme = useTheme();
   const navigate = useNavigate();
-  const scriptedRef = useScriptRef();
   const matchDownSM = useMediaQuery(theme.breakpoints.down('md'));
   const [showPassword, setShowPassword] = useState(false);
   const [checked, setChecked] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [strength, setStrength] = useState(0);
   const [level, setLevel] = useState();
+  const { showAlert, AlertComponent } = useAlert();
 
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -70,8 +71,8 @@ const FirebaseRegister = ({ ...others }) => {
     <>
       <Formik
         initialValues={{
-          firstname:'',
-          lastname:'',
+          firstname: '',
+          lastname: '',
           email: '',
           password: '',
           submit: null
@@ -82,47 +83,31 @@ const FirebaseRegister = ({ ...others }) => {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
-        onSubmit={async (values, { setErrors, setStatus, setSubmitting }) => {
+        onSubmit={async (values) => {
           try {
+            setLoading(true);
             const response = await axios.post(`${config.backendUrl}/register`, {
               user_name: values.firstname + ' ' + values.lastname,
               email: values.email,
               password: values.password
             });
             if (response.data.response === true) {
-              localStorage.setItem('token', JSON.stringify(response.data))
-              setStatus({ success: true });
-              setSubmitting(false);
-              Swal.fire({
-                title: "Success",
-                text: "Registration successfully",
-                icon: "success",
-                confirmButtonText: "OK",
-              }).then(() => {
+              localStorage.setItem('token', JSON.stringify(response.data));
+              showAlert('Registration successfully', 'success');
+              setTimeout(() => {
+                setLoading(false);
                 navigate('/dashboard');
-              });
-            }
-            else{
-              setStatus({ success: false });
-              setSubmitting(false);
-              Swal.fire({
-                title: "Error",
-                text: response.data.message,
-                icon: "error",
-                confirmButtonText: "OK",
-              });
+              }, 1000);
+            } else {
+              setLoading(false);
+              showAlert(response.data.message, 'error');
             }
           } catch (err) {
-            console.error(err);
-            if (scriptedRef.current) {
-              setStatus({ success: false });
-              setErrors({ submit: err.message });
-              setSubmitting(false);
-            }
+            setLoading(false);
           }
         }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
+        {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
           <form noValidate onSubmit={handleSubmit} {...others}>
             <Grid container spacing={matchDownSM ? 0 : 2}>
               <Grid item xs={12} sm={6}>
@@ -259,14 +244,15 @@ const FirebaseRegister = ({ ...others }) => {
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                  Sign up
+                <Button disableElevation disabled={loading} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign up'}
                 </Button>
               </AnimateButton>
             </Box>
           </form>
         )}
       </Formik>
+      <AlertComponent />
     </>
   );
 };

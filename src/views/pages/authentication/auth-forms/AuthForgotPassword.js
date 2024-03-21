@@ -20,14 +20,15 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 // assets
 import config from '../../../../config';
 import axios from 'axios';
-import Swal from "sweetalert2";
 import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
+import { useAlert } from 'ui-component/alert/alert';
 
 const AuthForgotPassword = ({ ...others }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { showAlert, AlertComponent } = useAlert();
 
   return (
     <>
@@ -37,47 +38,32 @@ const AuthForgotPassword = ({ ...others }) => {
           submit: null
         }}
         validationSchema={Yup.object().shape({
-          email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+          email: Yup.string().email('Must be a valid email').max(255).required('Email is required')
         })}
-        onSubmit={async (values, { setStatus, setSubmitting }) => {
+        onSubmit={async (values) => {
           try {
             setLoading(true);
             const email = values.email;
             const response = await axios.post(`${config.backendUrl}/forgot-password`, {
-              email: email,
+              email: email
             });
             if (response.data.response === true) {
-              setStatus({ success: true });
-              setLoading(false);
-              setSubmitting(false);
-              Swal.fire({
-                title: "Success",
-                text: response.data.message,
-                icon: "success",
-                confirmButtonText: "OK",
-              }).then(() => {
+              showAlert(response.data.message, 'success');
+              setTimeout(() => {
+                setLoading(false);
                 navigate('/otp', { state: { email } });
-              });
-            }
-            else{
-              setStatus({ success: false });
-              setSubmitting(false);
+              }, 1000);
+            } else {
               setLoading(false);
-              Swal.fire({
-                title: "Error",
-                text: response.data.message,
-                icon: "error",
-                confirmButtonText: "OK",
-              });
+              showAlert(response.data.message, 'error');
             }
           } catch (err) {
-            setSubmitting(false);
-            setStatus({ success: false });
+            setLoading(false);
           }
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
-          <form noValidate autoComplete='off' onSubmit={handleSubmit} {...others}>
+          <form noValidate autoComplete="off" onSubmit={handleSubmit} {...others}>
             <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
               <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
               <OutlinedInput
@@ -112,6 +98,7 @@ const AuthForgotPassword = ({ ...others }) => {
           </form>
         )}
       </Formik>
+      <AlertComponent />
     </>
   );
 };

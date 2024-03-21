@@ -6,6 +6,7 @@ import {
   Box,
   Button,
   Checkbox,
+  CircularProgress,
   FormControl,
   FormControlLabel,
   FormHelperText,
@@ -14,7 +15,7 @@ import {
   InputLabel,
   OutlinedInput,
   Stack,
-  Typography,
+  Typography
 } from '@mui/material';
 
 // third party
@@ -29,14 +30,15 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import config from '../../../../config';
 import axios from 'axios';
-import Swal from "sweetalert2";
 import { Link, useNavigate } from 'react-router-dom';
+import { useAlert } from 'ui-component/alert/alert';
 
 const FirebaseLogin = ({ ...others }) => {
   const theme = useTheme();
   const navigate = useNavigate();
+  const { showAlert, AlertComponent } = useAlert();
   const [checked, setChecked] = useState(true);
-
+  const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const handleClickShowPassword = () => {
     setShowPassword(!showPassword);
@@ -58,43 +60,31 @@ const FirebaseLogin = ({ ...others }) => {
           email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
           password: Yup.string().max(255).required('Password is required')
         })}
-        onSubmit={async (values, { setStatus, setSubmitting }) => {
+        onSubmit={async (values) => {
           try {
+            setLoading(true);
             const response = await axios.post(`${config.backendUrl}/login`, {
               email: values.email,
               password: values.password
             });
             if (response.data.response === true) {
-              localStorage.setItem('token', JSON.stringify(response.data))
-              setStatus({ success: true });
-              setSubmitting(false);
-              Swal.fire({
-                title: "Success",
-                text: "Login successful",
-                icon: "success",
-                confirmButtonText: "OK",
-              }).then(() => {
+              localStorage.setItem('token', JSON.stringify(response.data));
+              showAlert('Login successful', 'success');
+              setTimeout(() => {
+                setLoading(false);
                 navigate('/dashboard');
-              });
-            }
-            else{
-              setStatus({ success: false });
-              setSubmitting(false);
-              Swal.fire({
-                title: "Error",
-                text: response.data.message,
-                icon: "error",
-                confirmButtonText: "OK",
-              });
+              }, 1000);
+            } else {
+              setLoading(false);
+              showAlert(response.data.message, 'error');
             }
           } catch (err) {
-            setSubmitting(false);
-            setStatus({ success: false });
+            setLoading(false);
           }
         }}
       >
-        {({ errors, handleBlur, handleChange, handleSubmit, isSubmitting, touched, values }) => (
-          <form noValidate autoComplete='off' onSubmit={handleSubmit} {...others}>
+        {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
+          <form noValidate autoComplete="off" onSubmit={handleSubmit} {...others}>
             <FormControl fullWidth error={Boolean(touched.email && errors.email)} sx={{ ...theme.typography.customInput }}>
               <InputLabel htmlFor="outlined-adornment-email-login">Email Address / Username</InputLabel>
               <OutlinedInput
@@ -152,7 +142,13 @@ const FirebaseLogin = ({ ...others }) => {
                 }
                 label="Remember me"
               />
-              <Typography component={Link} to="/forgot-password" variant="subtitle1" color="secondary" sx={{ textDecoration: 'none', cursor: 'pointer' }}>
+              <Typography
+                component={Link}
+                to="/forgot-password"
+                variant="subtitle1"
+                color="secondary"
+                sx={{ textDecoration: 'none', cursor: 'pointer' }}
+              >
                 Forgot Password?
               </Typography>
             </Stack>
@@ -164,14 +160,15 @@ const FirebaseLogin = ({ ...others }) => {
 
             <Box sx={{ mt: 2 }}>
               <AnimateButton>
-                <Button disableElevation disabled={isSubmitting} fullWidth size="large" type="submit" variant="contained" color="secondary">
-                  Sign in
+                <Button disableElevation disabled={loading} fullWidth size="large" type="submit" variant="contained" color="secondary">
+                  {loading ? <CircularProgress size={24} color="inherit" /> : 'Sign in'}
                 </Button>
               </AnimateButton>
             </Box>
           </form>
         )}
       </Formik>
+      <AlertComponent />
     </>
   );
 };

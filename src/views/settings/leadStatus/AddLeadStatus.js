@@ -1,5 +1,5 @@
 // material-ui
-import { Box, Button, FormControl, FormHelperText, TextField, Grid, FormControlLabel, Switch, CircularProgress } from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, TextField, Grid, CircularProgress } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
@@ -15,63 +15,58 @@ import { useAlert } from 'ui-component/alert/alert';
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
-const AddEditBranchLocation = () => {
-  const [status, setStatus] = useState(false);
+const AddEditLeadStatus = () => {
   const [loading, setLoading] = useState(false);
-  const [branchLocation, setBranchlocation] = useState([]);
+  const [leadStatus, setLeadStatus] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location && location.state !== null) {
-      getBranchById(location.state);
+      getLeadStatusById(location.state);
     }
   }, []);
 
-  const getBranchById = async (id) => {
-    const response = await GetByIdRequest('/branchlocation/getlocationbyid/', id);
-    setStatus(response.data.status);
-    setBranchlocation(response.data);
+  const getLeadStatusById = async (id) => {
+    const response = await GetByIdRequest('/leadstatus/getleadstatusbyid/', id);
+    setLeadStatus(response.data);
   };
 
   const initialValues = {
-    location_name: branchLocation.location_name ? branchLocation.location_name : '',
-    status: branchLocation.status ? status : false,
+    lead_status: leadStatus.lead_status ? leadStatus.lead_status : '',
     submit: null
   };
 
   const handleCancelClick = () => {
-    navigate('/setting/branchlocation');
+    navigate('/setting/leadstatus');
   };
   return (
     <>
-      <MainCard title={`${branchLocation === '' ? 'Add' : 'Edit'} Branch Location`}>
+      <MainCard title={`${leadStatus.length === 0 ? 'Add' : 'Edit'} Lead Status`}>
         <Formik
           enableReinitialize
           initialValues={initialValues}
           validationSchema={Yup.object().shape({
-            location_name: Yup.string().required('Location name is required')
+            lead_status: Yup.string().required('Lead Status is required')
           })}
           onSubmit={async (values) => {
             try {
               setLoading(true);
               let response;
-              branchLocation._id
-                ? (response = await UpdateRequest('/branchlocation/editbranchlocation/', {
-                    location_name: values.location_name,
-                    status: status,
-                    id: branchLocation._id
+              leadStatus._id
+                ? (response = await UpdateRequest('/leadstatus/editleadstatus/', {
+                    lead_status: values.lead_status,
+                    id: leadStatus._id
                   }))
-                : (response = await PostRequest('/branchlocation/addbranchlocation', {
-                    location_name: values.location_name,
-                    status: status
+                : (response = await PostRequest('/leadstatus/addleadstatus', {
+                    lead_status: values.lead_status
                   }));
               if (response.response === true) {
                 showAlert(response.message, 'success');
                 setTimeout(() => {
                   setLoading(false);
-                  navigate('/setting/branchlocation');
+                  navigate('/setting/leadstatus');
                 }, 1000);
               } else {
                 setLoading(false);
@@ -87,36 +82,23 @@ const AddEditBranchLocation = () => {
               <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.location_name && errors.location_name)}>
+                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.lead_status && errors.lead_status)}>
                       <TextField
-                        id="outlined-adornment-location_name"
+                        id="outlined-adornment-lead_status"
                         type="text"
-                        value={values.location_name}
-                        name="location_name"
+                        value={values.lead_status}
+                        name="lead_status"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Location Name"
-                        error={Boolean(touched.location_name && errors.location_name)}
+                        label="Lead Status"
+                        error={Boolean(touched.lead_status && errors.lead_status)}
                         variant="outlined" // Add this line
                       />
-                      {touched.location_name && errors.location_name && (
-                        <FormHelperText error id="standard-weight-helper-text-location_name">
-                          {errors.location_name}
+                      {touched.lead_status && errors.lead_status && (
+                        <FormHelperText error id="standard-weight-helper-text-lead_status">
+                          {errors.lead_status}
                         </FormHelperText>
                       )}
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <FormControl fullWidth sx={{ marginBottom: '18px' }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={status} // Set the checked prop to status
-                            onChange={(e) => setStatus(e.target.checked)} // Update status value on change
-                          />
-                        }
-                        label="IsActive?"
-                      />
                     </FormControl>
                   </Grid>
                 </Grid>
@@ -145,4 +127,4 @@ const AddEditBranchLocation = () => {
   );
 };
 
-export default AddEditBranchLocation;
+export default AddEditLeadStatus;

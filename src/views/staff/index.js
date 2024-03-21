@@ -1,12 +1,12 @@
 // material-ui
-import { Grid, Box, IconButton } from '@mui/material';
+import { Grid, Box, Button } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import CommonTable from 'ui-component/table/CommonTable';
 import { useEffect, useState } from 'react';
 import GetRequest from 'commonRequest/getRequest';
 import { styled } from '@mui/system';
-import EditIcon from '@mui/icons-material/Edit';
-import DeleteIcon from '@mui/icons-material/Delete';
+import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
+import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import DeleteRequest from 'commonRequest/deleteRequest';
 import Swal from 'sweetalert2';
 import { useAlert } from 'ui-component/alert/alert';
@@ -25,15 +25,15 @@ const Staff = () => {
   const navigate = useNavigate();
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
+    { field: 'id', headerName: 'ID', width: 50, valueGetter: (params) => params.row.id + 1 },
     {
       field: 'first_name',
       headerName: 'First name',
-      width: 150,
+      width: 130,
       sortable: false,
       valueGetter: (params) => `${params.row.first_name || ''}`
     },
-    { field: 'last_name', headerName: 'Last name', width: 150, sortable: false, valueGetter: (params) => `${params.row.last_name || ''}` },
+    { field: 'last_name', headerName: 'Last name', width: 130, sortable: false, valueGetter: (params) => `${params.row.last_name || ''}` },
     {
       field: 'email',
       headerName: 'Email',
@@ -52,16 +52,34 @@ const Staff = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: 120,
       sortable: false,
       renderCell: (params) => (
         <>
-          <IconButton onClick={() => handleEdit(params.row._id)}>
-            <EditIcon />
-          </IconButton>
-          <IconButton onClick={() => handleDelete(params.row._id)}>
-            <DeleteIcon />
-          </IconButton>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
+            <Button
+              onClick={() => handleEdit(params.row._id)}
+              size="small"
+              style={{
+                width: '40px',
+                minWidth: '40px',
+                height: '40px',
+                border: '1px solid rgb(220 220 220)',
+                borderRadius: '5px',
+                marginRight: '6px'
+              }}
+            >
+              <EditOutlinedIcon />
+            </Button>
+            <Button
+              onClick={() => handleDelete(params.row._id)}
+              size="small"
+              style={{ width: '40px', minWidth: '40px', height: '40px', border: '1px solid rgb(220 220 220)', borderRadius: '5px' }}
+              color="error"
+            >
+              <DeleteOutlinedIcon />
+            </Button>
+          </div>
         </>
       )
     }
@@ -99,7 +117,7 @@ const Staff = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await DeleteRequest('/staff/delete-staff/', id);
+        const response = await DeleteRequest('/staff/deletestaff/', id);
         if (response.response == true) {
           showAlert(response.message, 'success');
           setTimeout(() => {

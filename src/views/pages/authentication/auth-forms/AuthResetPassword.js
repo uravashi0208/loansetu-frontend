@@ -22,16 +22,17 @@ import AnimateButton from 'ui-component/extended/AnimateButton';
 // assets
 import config from '../../../../config';
 import axios from 'axios';
-import Swal from "sweetalert2";
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
+import { useAlert } from 'ui-component/alert/alert';
 
 const AuthResetPassword = ({ ...others }) => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { showAlert, AlertComponent } = useAlert();
   const location = useLocation();
   const email = location.state && location.state.email;
 
@@ -57,38 +58,29 @@ const AuthResetPassword = ({ ...others }) => {
     <>
       <Formik
         initialValues={{
-          password:'',
-          confirmpassword:'',
+          password: '',
+          confirmpassword: '',
           submit: null
         }}
-         validationSchema={Yup.object().shape({
+        validationSchema={Yup.object().shape({
           password: Yup.string().max(255).required('Password is required')
         })}
         onSubmit={async (values) => {
           try {
             setLoading(true);
             const response = await axios.post(`${config.backendUrl}/reserpassword`, {
-              email,password: values.password
+              email,
+              password: values.password
             });
             if (response.data.response === true) {
               setLoading(false);
-              Swal.fire({
-                title: "Success",
-                text: response.data.message,
-                icon: "success",
-                confirmButtonText: "OK",
-              }).then(() => {
+              showAlert(response.data.message, 'success');
+              setTimeout(() => {
                 navigate('/login');
-              });
-            }
-            else{
+              }, 1000);
+            } else {
               setLoading(false);
-              Swal.fire({
-                title: "Error",
-                text: response.data.message,
-                icon: "error",
-                confirmButtonText: "OK",
-              });
+              showAlert(response.data.message, 'error');
             }
           } catch (err) {
             setLoading(false);
@@ -96,7 +88,7 @@ const AuthResetPassword = ({ ...others }) => {
         }}
       >
         {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
-          <form noValidate autoComplete='off' onSubmit={handleSubmit} {...others}>
+          <form noValidate autoComplete="off" onSubmit={handleSubmit} {...others}>
             <FormControl fullWidth error={Boolean(touched.password && errors.password)} sx={{ ...theme.typography.customInput }}>
               <InputLabel htmlFor="outlined-adornment-password-login">Password</InputLabel>
               <OutlinedInput
@@ -128,7 +120,11 @@ const AuthResetPassword = ({ ...others }) => {
                 </FormHelperText>
               )}
             </FormControl>
-            <FormControl fullWidth error={Boolean(touched.confirmpassword && errors.confirmpassword)} sx={{ ...theme.typography.customInput }}>
+            <FormControl
+              fullWidth
+              error={Boolean(touched.confirmpassword && errors.confirmpassword)}
+              sx={{ ...theme.typography.customInput }}
+            >
               <InputLabel htmlFor="outlined-adornment-password-login">Confirm Password</InputLabel>
               <OutlinedInput
                 id="outlined-adornment-password-login"
@@ -175,6 +171,7 @@ const AuthResetPassword = ({ ...others }) => {
           </form>
         )}
       </Formik>
+      <AlertComponent />
     </>
   );
 };

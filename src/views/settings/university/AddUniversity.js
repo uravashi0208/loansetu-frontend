@@ -1,5 +1,5 @@
 // material-ui
-import { Box, Button, FormControl, FormHelperText, TextField, Grid, FormControlLabel, Switch, CircularProgress } from '@mui/material';
+import { Box, Button, FormControl, FormHelperText, TextField, Grid, CircularProgress } from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
@@ -15,63 +15,65 @@ import { useAlert } from 'ui-component/alert/alert';
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
-const AddEditBranchLocation = () => {
+const AddEditUniversity = () => {
   const [status, setStatus] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [branchLocation, setBranchlocation] = useState([]);
+  const [universityData, setUniversityData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location && location.state !== null) {
-      getBranchById(location.state);
+      getUniversityById(location.state);
     }
   }, []);
 
-  const getBranchById = async (id) => {
-    const response = await GetByIdRequest('/branchlocation/getlocationbyid/', id);
+  const getUniversityById = async (id) => {
+    const response = await GetByIdRequest('/university/getuniversitybyid/', id);
     setStatus(response.data.status);
-    setBranchlocation(response.data);
+    setUniversityData(response.data);
   };
 
   const initialValues = {
-    location_name: branchLocation.location_name ? branchLocation.location_name : '',
-    status: branchLocation.status ? status : false,
+    country_name: universityData.country_name ? universityData.country_name : '',
+    university_name: universityData.university_name ? universityData.university_name : '',
     submit: null
   };
 
   const handleCancelClick = () => {
-    navigate('/setting/branchlocation');
+    navigate('/setting/university');
   };
   return (
     <>
-      <MainCard title={`${branchLocation === '' ? 'Add' : 'Edit'} Branch Location`}>
+      <MainCard title={`${universityData.length === 0 ? 'Add' : 'Edit'} University`}>
         <Formik
           enableReinitialize
           initialValues={initialValues}
           validationSchema={Yup.object().shape({
-            location_name: Yup.string().required('Location name is required')
+            country_name: Yup.string().required('Country name is required'),
+            university_name: Yup.string().required('University name is required')
           })}
           onSubmit={async (values) => {
             try {
               setLoading(true);
               let response;
-              branchLocation._id
-                ? (response = await UpdateRequest('/branchlocation/editbranchlocation/', {
-                    location_name: values.location_name,
-                    status: status,
-                    id: branchLocation._id
+              universityData._id
+                ? (response = await UpdateRequest('/university/edituniversity/', {
+                    country_name: values.country_name,
+                    university_name: values.university_name,
+                    id: universityData._id
                   }))
-                : (response = await PostRequest('/branchlocation/addbranchlocation', {
-                    location_name: values.location_name,
+                : (response = await PostRequest('/university/adduniversity', {
+                    country_name: values.country_name,
+                    university_name: values.university_name,
                     status: status
                   }));
               if (response.response === true) {
                 showAlert(response.message, 'success');
                 setTimeout(() => {
                   setLoading(false);
-                  navigate('/setting/branchlocation');
+                  navigate('/setting/university');
                 }, 1000);
               } else {
                 setLoading(false);
@@ -87,36 +89,43 @@ const AddEditBranchLocation = () => {
               <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.location_name && errors.location_name)}>
+                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.country_name && errors.country_name)}>
                       <TextField
-                        id="outlined-adornment-location_name"
+                        id="outlined-adornment-country_name"
                         type="text"
-                        value={values.location_name}
-                        name="location_name"
+                        value={values.country_name}
+                        name="country_name"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Location Name"
-                        error={Boolean(touched.location_name && errors.location_name)}
+                        label="Country Name"
+                        error={Boolean(touched.country_name && errors.country_name)}
                         variant="outlined" // Add this line
                       />
-                      {touched.location_name && errors.location_name && (
-                        <FormHelperText error id="standard-weight-helper-text-location_name">
-                          {errors.location_name}
+                      {touched.country_name && errors.country_name && (
+                        <FormHelperText error id="standard-weight-helper-text-country_name">
+                          {errors.country_name}
                         </FormHelperText>
                       )}
                     </FormControl>
                   </Grid>
                   <Grid item xs={12} md={6}>
-                    <FormControl fullWidth sx={{ marginBottom: '18px' }}>
-                      <FormControlLabel
-                        control={
-                          <Switch
-                            checked={status} // Set the checked prop to status
-                            onChange={(e) => setStatus(e.target.checked)} // Update status value on change
-                          />
-                        }
-                        label="IsActive?"
+                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.university_name && errors.university_name)}>
+                      <TextField
+                        id="outlined-adornment-university_name"
+                        type="text"
+                        value={values.university_name}
+                        name="university_name"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="University Name"
+                        error={Boolean(touched.university_name && errors.university_name)}
+                        variant="outlined" // Add this line
                       />
+                      {touched.university_name && errors.university_name && (
+                        <FormHelperText error id="standard-weight-helper-text-university_name">
+                          {errors.university_name}
+                        </FormHelperText>
+                      )}
                     </FormControl>
                   </Grid>
                 </Grid>
@@ -145,4 +154,4 @@ const AddEditBranchLocation = () => {
   );
 };
 
-export default AddEditBranchLocation;
+export default AddEditUniversity;
