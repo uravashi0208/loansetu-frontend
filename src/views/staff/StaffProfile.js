@@ -59,11 +59,13 @@ const StaffProfile = () => {
 
   const getStaffById = async (id) => {
     const response = await GetByIdRequest('/staff/getstaffbyid/', id);
-    setStaffData(response.data);
-    setSelectedImage(response.data.image);
-    setSelectedPanImage(response.data.pan_image);
-    setSelectedAadharImage(response.data.aadhar_image);
-    setSelectedContractPdf(response.data.contract_pdf);
+    if (response.data) {
+      setStaffData(response.data);
+      setSelectedImage(response.data.image);
+      setSelectedPanImage(response.data.pan_image);
+      setSelectedAadharImage(response.data.aadhar_image);
+      setSelectedContractPdf(response.data.contract_pdf);
+    }
   };
 
   const getAllBranchLocation = async () => {
@@ -86,7 +88,7 @@ const StaffProfile = () => {
     email: staffData.email ? staffData.email : '',
     rate: staffData.rate ? staffData.rate : '',
     phone: staffData.phone ? staffData.phone : '',
-    password: staffData.password ? staffData.password : '',
+    password: '',
     company_email: staffData.company_email ? staffData.company_email : '',
     emailsignature: staffData.emailsignature ? staffData.emailsignature : '',
     isAdmin: staffData.isAdmin ? staffData.isAdmin : false,
@@ -289,39 +291,41 @@ const StaffProfile = () => {
                         )}
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth error={Boolean(touched.password && errors.password)}>
-                        <TextField
-                          id="outlined-adornment-password-login"
-                          type={showPassword ? 'text' : 'password'}
-                          value={values.password}
-                          name="password"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Password"
-                          error={Boolean(touched.password && errors.password)}
-                          variant="outlined" // Add this line
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                                size="large"
-                              >
-                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                        />
-                        {touched.password && errors.password && (
-                          <FormHelperText error id="standard-weight-helper-text-password-login">
-                            {errors.password}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
+                    {staffData && !staffData.password && (
+                      <Grid item xs={12} md={6}>
+                        <FormControl fullWidth error={Boolean(touched.password && errors.password)}>
+                          <TextField
+                            id="outlined-adornment-password-login"
+                            type={showPassword ? 'text' : 'password'}
+                            value={values.password}
+                            name="password"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            label="Password"
+                            error={Boolean(touched.password && errors.password)}
+                            variant="outlined" // Add this line
+                            endAdornment={
+                              <InputAdornment position="end">
+                                <IconButton
+                                  aria-label="toggle password visibility"
+                                  onClick={handleClickShowPassword}
+                                  onMouseDown={handleMouseDownPassword}
+                                  edge="end"
+                                  size="large"
+                                >
+                                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                                </IconButton>
+                              </InputAdornment>
+                            }
+                          />
+                          {touched.password && errors.password && (
+                            <FormHelperText error id="standard-weight-helper-text-password-login">
+                              {errors.password}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
 
@@ -560,7 +564,6 @@ const StaffProfile = () => {
                           type="file"
                           accept="pdf/*"
                           onChange={(event) => {
-                            console.log('event.currentTarget.files[0] :', event.currentTarget.files[0].name);
                             setSelectedContractPdf(event.currentTarget.files[0].name);
                             setFieldValue('contract_pdf', event.currentTarget.files[0]);
                           }}

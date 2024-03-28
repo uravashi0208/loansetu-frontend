@@ -3,9 +3,9 @@ import config from '../config';
 import authHeader from 'services/auth-header';
 var API_URL = config.backendUrl;
 
-const GetRequest = async (url) => {
+const GetRequestOnRole = async (url, id) => {
   try {
-    const response = await axios.get(API_URL + url, { headers: authHeader() });
+    const response = await axios.get(API_URL + url + id, { headers: authHeader() });
     return response.data;
   } catch (error) {
     // Handle errors
@@ -14,4 +14,4 @@ const GetRequest = async (url) => {
   }
 };
 
-export default GetRequest;
+export default GetRequestOnRole;

@@ -71,10 +71,12 @@ const BranchLocation = () => {
   }, []);
 
   const getAllBranchLocation = async () => {
+    setLoading(true);
     const response = await GetRequest('/branchlocation/getbranchlocation');
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.status }));
       setBranchLocationData(modifiedData);
+      setLoading(false);
     }
   };
 

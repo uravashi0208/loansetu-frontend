@@ -15,6 +15,11 @@ const NavGroup = ({ item }) => {
 
   // menu list collapse & items
   const items = item.children?.map((menu) => {
+    const tokenValue = localStorage.getItem('token');
+    const roleData = JSON.parse(tokenValue);
+    if (roleData.data.role === 'staff' && menu.id === 'staff') {
+      return null;
+    }
     switch (menu.type) {
       case 'collapse':
         return <NavCollapse key={menu.id} menu={menu} level={1} />;

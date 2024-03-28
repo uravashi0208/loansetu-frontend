@@ -1,8 +1,8 @@
 // assets
-import { IconUsers, IconLadder } from '@tabler/icons-react';
+import { IconUsers, IconLadder, IconFilter, IconSchool, IconBellRinging } from '@tabler/icons-react';
 
 // constant
-const icons = { IconUsers, IconLadder };
+const icons = { IconUsers, IconLadder, IconFilter, IconSchool, IconBellRinging };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -23,7 +23,23 @@ const other = {
       title: 'Lead',
       type: 'item',
       url: '/lead',
-      icon: icons.IconLadder,
+      icon: icons.IconFilter,
+      breadcrumbs: false
+    },
+    {
+      id: 'student',
+      title: 'Student',
+      type: 'item',
+      url: '/student',
+      icon: icons.IconSchool,
+      breadcrumbs: false
+    },
+    {
+      id: 'notification',
+      title: 'Notification',
+      type: 'item',
+      url: '/notification',
+      icon: icons.IconBellRinging,
       breadcrumbs: false
     }
   ]

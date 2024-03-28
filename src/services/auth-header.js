@@ -5,9 +5,13 @@ export default function authHeader() {
 
   const user = JSON.parse(localStorage.getItem('token'));
   if (user && user.token) {
-    return { Authorization: 'Bearer ' + user.token };
-  } else {
-    return {};
-    // navigate('/login');
+    const currentTime = Date.now() / 1000; // Convert milliseconds to seconds
+    if (currentTime > user.exp) {
+      localStorage.removeItem('token');
+    } else {
+      // Token still valid, return Authorization header
+      return { Authorization: 'Bearer ' + user.token };
+    }
   }
+  return {};
 }

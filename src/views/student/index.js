@@ -1,38 +1,65 @@
 // material-ui
 import { Grid, Box, Button } from '@mui/material';
-import GetRequest from 'commonRequest/getRequest';
-import { useEffect, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
 import CommonTable from 'ui-component/table/CommonTable';
+import { useEffect, useState } from 'react';
+import { styled } from '@mui/system';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import Swal from 'sweetalert2';
 import DeleteRequest from 'commonRequest/deleteRequest';
-import { useNavigate } from 'react-router';
+import Swal from 'sweetalert2';
 import { useAlert } from 'ui-component/alert/alert';
+import { useNavigate } from 'react-router';
+import GetRequestOnRole from 'commonRequest/getRequestRole';
 
+const StyledTooltip = styled('div')({
+  cursor: 'pointer'
+});
 // project imports
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
-const CourseType = () => {
-  const [courseTypeData, setCourseTypeData] = useState([]);
+const Studentss = () => {
+  const [studentData, setStudentData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const tokenValue = localStorage.getItem('token');
+  const userData = JSON.parse(tokenValue);
   const columns = [
-    { field: 'id', headerName: 'ID', width: 100, valueGetter: (params) => params.row.id + 1 },
+    { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'course_type_name',
-      headerName: 'Course Type',
-      width: 300,
+      field: 'student_name',
+      headerName: 'Student name',
+      width: 150,
       sortable: false,
-      valueGetter: (params) => `${params.row.course_type_name || ''}`
+      valueGetter: (params) => `${params.row.student_name || ''}`
     },
+    {
+      field: 'email',
+      headerName: 'Email',
+      width: 200,
+      valueGetter: (params) => {
+        const email = params.row.email || '';
+        if (email.length > 20) {
+          return `${email.substr(0, 20)}...`; // Show first 20 characters with ellipsis
+        }
+        return email;
+      },
+      renderCell: (params) => <StyledTooltip title={params.row.email}>{params.value}</StyledTooltip>
+    },
+    { field: 'phone', headerName: 'Phone Number', width: 150 },
+    {
+      field: 'universityDetails.university_name',
+      headerName: 'University',
+      width: 300,
+      valueGetter: (params) => (params.row.universityDetails ? params.row.universityDetails.university_name || '' : '')
+    },
+    { field: 'course_name', headerName: 'Course Name', width: 150 },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 300,
+      width: 100,
       sortable: false,
       renderCell: (params) => (
         <>
@@ -66,25 +93,26 @@ const CourseType = () => {
   ];
 
   useEffect(() => {
-    getAllCourseType();
+    getAllStudent();
   }, []);
 
-  const getAllCourseType = async () => {
+  const getAllStudent = async () => {
+    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
     setLoading(true);
-    const response = await GetRequest('/coursetype/getcoursetype');
+    const response = await GetRequestOnRole('/student/getstudent/', userid);
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
-      setCourseTypeData(modifiedData);
+      setStudentData(modifiedData);
       setLoading(false);
     }
   };
 
   const handleEdit = async (id) => {
-    navigate('/setting/coursetype/addcoursetype', { state: id });
+    navigate('/student/addeditstudent', { state: id });
   };
-
   const handleDelete = (id) => {
     Swal.fire({
+      // Use Swal.fire() instead of Swal()
       title: 'Are you sure?',
       text: 'Once deleted, you will not be able to recover this details!',
       icon: 'warning',
@@ -94,29 +122,25 @@ const CourseType = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await DeleteRequest('/coursetype/deletecoursetype/', id);
+        const response = await DeleteRequest('/student/deletestudent/', id);
         if (response.response == true) {
           showAlert(response.message, 'success');
           setTimeout(() => {
-            getAllCourseType();
-            setLoading(false);
+            getAllStudent();
           }, 1000);
         } else {
-          setLoading(false);
-          s;
           showAlert(response.message, 'error');
         }
       }
     });
   };
-
   return (
     <>
       <Grid container>
         <Grid item xs={12}>
-          <MainCard title={'Course Type'} subtitle={true} buttonname={'Add New Course Type'} redirectlink={'addcoursetype'}>
+          <MainCard title={'Students'} subtitle={true} buttonname={'Add New Student'} redirectlink={'addeditstudent'}>
             <Box sx={{ width: '100%', typography: 'subtitle1' }}>
-              <CommonTable rows={courseTypeData} columns={columns} isloading={loading} />
+              <CommonTable rows={studentData} columns={columns} isloading={loading} />
             </Box>
           </MainCard>
         </Grid>
@@ -126,4 +150,4 @@ const CourseType = () => {
   );
 };
 
-export default CourseType;
+export default Studentss;

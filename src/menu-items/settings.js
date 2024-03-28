@@ -1,11 +1,13 @@
 // assets
-import { IconLocation, IconStatusChange, IconBackpack } from '@tabler/icons-react';
+import { IconLocation, IconStatusChange, IconBackpack, IconCertificate, IconBuildingBank } from '@tabler/icons-react';
 
 // constant
 const icons = {
   IconLocation,
   IconStatusChange,
-  IconBackpack
+  IconBackpack,
+  IconCertificate,
+  IconBuildingBank
 };
 
 // ==============================|| SETTINGS MENU ITEMS ||============================== //
@@ -44,7 +46,15 @@ const settings = {
       title: 'Course Type',
       type: 'item',
       url: '/setting/coursetype',
-      icon: icons.IconBackpack,
+      icon: icons.IconCertificate,
+      breadcrumbs: false
+    },
+    {
+      id: 'loantype',
+      title: 'Loan Type',
+      type: 'item',
+      url: '/setting/loantype',
+      icon: icons.IconBuildingBank,
       breadcrumbs: false
     }
   ]

@@ -70,10 +70,12 @@ const LeadStatus = () => {
   }, []);
 
   const getAllLeadStatus = async () => {
+    setLoading(true);
     const response = await GetRequest('/leadstatus/getleadstatus');
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
       setLeadStatusData(modifiedData);
+      setLoading(false);
     }
   };
 

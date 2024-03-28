@@ -1,5 +1,5 @@
 // material-ui
-import { Grid, Box, Button } from '@mui/material';
+import { Grid, Box, Button, Tooltip } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import CommonTable from 'ui-component/table/CommonTable';
 import { useEffect, useState } from 'react';
@@ -7,6 +7,9 @@ import GetRequest from 'commonRequest/getRequest';
 import { styled } from '@mui/system';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
+import PictureAsPdfIcon from '@mui/icons-material/PictureAsPdf';
+import VrpanoIcon from '@mui/icons-material/Vrpano';
+import ImageIcon from '@mui/icons-material/Image';
 import DeleteRequest from 'commonRequest/deleteRequest';
 import Swal from 'sweetalert2';
 import { useAlert } from 'ui-component/alert/alert';
@@ -22,6 +25,7 @@ const StyledTooltip = styled('div')({
 const Staff = () => {
   const [staffData, setStaffData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const columns = [
@@ -49,6 +53,82 @@ const Staff = () => {
     },
     { field: 'phone', headerName: 'Phone Number', width: 130 },
     { field: 'user_status', headerName: 'Status', width: 100 },
+    {
+      field: 'download',
+      headerName: 'Download',
+      width: 150,
+      sortable: false,
+      renderCell: (params) => (
+        <>
+          <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
+            <Tooltip title="Download Pan Card">
+              <a
+                href={params.row.pan_image} // Provide the URL for the Aadhar card image
+                download={params.row.pan_image} // Set the filename for the downloaded file
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'green'
+                }}
+              >
+                <ImageIcon />
+              </a>
+            </Tooltip>
+            {/* Download PAN Card */}
+            <Tooltip title="Download Aadhar Card">
+              <a
+                href={params.row.aadhar_image} // Provide the URL for the Aadhar card image
+                download={params.row.aadhar_image} // Set the filename for the downloaded file
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <VrpanoIcon />
+              </a>
+            </Tooltip>
+            {/* Download Contract PDF */}
+            <Tooltip title="Download Contract PDF">
+              <a
+                href={params.row.contract_pdf} // Provide the URL for the Aadhar card image
+                download={params.row.contract_pdf} // Set the filename for the downloaded file
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'red'
+                }}
+              >
+                <PictureAsPdfIcon />
+              </a>
+            </Tooltip>
+          </div>
+        </>
+      )
+    },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -90,10 +170,12 @@ const Staff = () => {
   }, []);
 
   const getAllStaff = async () => {
+    setLoading(true);
     const response = await GetRequest('/staff/getstaff');
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.user_status }));
       setStaffData(modifiedData);
+      setLoading(false);
     }
   };
 
@@ -135,7 +217,7 @@ const Staff = () => {
         <Grid item xs={12}>
           <MainCard title={'Staff Details'} subtitle={true} buttonname={'Add New Staff'} redirectlink={'addstaff'}>
             <Box sx={{ width: '100%', typography: 'subtitle1' }}>
-              <CommonTable rows={staffData} columns={columnsWithStatusText} />
+              <CommonTable rows={staffData} columns={columnsWithStatusText} isloading={loading} />
             </Box>
           </MainCard>
         </Grid>

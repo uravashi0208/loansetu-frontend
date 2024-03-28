@@ -15,19 +15,19 @@ import { useAlert } from 'ui-component/alert/alert';
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
-const CourseType = () => {
-  const [courseTypeData, setCourseTypeData] = useState([]);
+const Loantype = () => {
+  const [loanTypeData, setLoanTypeData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const columns = [
     { field: 'id', headerName: 'ID', width: 100, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'course_type_name',
-      headerName: 'Course Type',
+      field: 'loan_type',
+      headerName: 'Loan Type',
       width: 300,
       sortable: false,
-      valueGetter: (params) => `${params.row.course_type_name || ''}`
+      valueGetter: (params) => `${params.row.loan_type || ''}`
     },
     {
       field: 'actions',
@@ -66,21 +66,21 @@ const CourseType = () => {
   ];
 
   useEffect(() => {
-    getAllCourseType();
+    getAllLoanType();
   }, []);
 
-  const getAllCourseType = async () => {
+  const getAllLoanType = async () => {
     setLoading(true);
-    const response = await GetRequest('/coursetype/getcoursetype');
+    const response = await GetRequest('/loantype/getloantype');
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
-      setCourseTypeData(modifiedData);
+      setLoanTypeData(modifiedData);
       setLoading(false);
     }
   };
 
   const handleEdit = async (id) => {
-    navigate('/setting/coursetype/addcoursetype', { state: id });
+    navigate('/setting/loantype/addloantype', { state: id });
   };
 
   const handleDelete = (id) => {
@@ -94,11 +94,11 @@ const CourseType = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await DeleteRequest('/coursetype/deletecoursetype/', id);
+        const response = await DeleteRequest('/loantype/deleteloantype/', id);
         if (response.response == true) {
           showAlert(response.message, 'success');
           setTimeout(() => {
-            getAllCourseType();
+            getAllLoanType();
             setLoading(false);
           }, 1000);
         } else {
@@ -114,9 +114,9 @@ const CourseType = () => {
     <>
       <Grid container>
         <Grid item xs={12}>
-          <MainCard title={'Course Type'} subtitle={true} buttonname={'Add New Course Type'} redirectlink={'addcoursetype'}>
+          <MainCard title={'Loan Type'} subtitle={true} buttonname={'Add New Loan Type'} redirectlink={'addloantype'}>
             <Box sx={{ width: '100%', typography: 'subtitle1' }}>
-              <CommonTable rows={courseTypeData} columns={columns} isloading={loading} />
+              <CommonTable rows={loanTypeData} columns={columns} isloading={loading} />
             </Box>
           </MainCard>
         </Grid>
@@ -126,4 +126,4 @@ const CourseType = () => {
   );
 };
 
-export default CourseType;
+export default Loantype;

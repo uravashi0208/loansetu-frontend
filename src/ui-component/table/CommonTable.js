@@ -4,7 +4,7 @@ import { Box, CircularProgress } from '@mui/material';
 
 const CommonTable = ({ rows, columns, isloading }) => {
   return (
-    <div style={{ width: '100%' }}>
+    <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
       {isloading ? (
         <CircularProgress size={24} color="inherit" />
       ) : rows.length > 0 ? (

@@ -15,62 +15,58 @@ import { useAlert } from 'ui-component/alert/alert';
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
-const AddEditUniversity = () => {
+const AddEditLoanType = () => {
   const [loading, setLoading] = useState(false);
-  const [universityData, setUniversityData] = useState([]);
+  const [loanType, setLoanType] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const navigate = useNavigate();
   const location = useLocation();
 
   useEffect(() => {
     if (location && location.state !== null) {
-      getUniversityById(location.state);
+      getLoanTypeById(location.state);
     }
   }, []);
 
-  const getUniversityById = async (id) => {
-    const response = await GetByIdRequest('/university/getuniversitybyid/', id);
-    setUniversityData(response.data);
+  const getLoanTypeById = async (id) => {
+    const response = await GetByIdRequest('/loantype/getloantypebyid/', id);
+    setLoanType(response.data);
   };
 
   const initialValues = {
-    country_name: universityData.country_name ? universityData.country_name : '',
-    university_name: universityData.university_name ? universityData.university_name : '',
+    loan_type: loanType.loan_type ? loanType.loan_type : '',
     submit: null
   };
 
   const handleCancelClick = () => {
-    navigate('/setting/university');
+    navigate('/setting/loantype');
   };
   return (
     <>
-      <MainCard title={`${universityData.length === 0 ? 'Add' : 'Edit'} University`}>
+      <MainCard title={`${loanType.length === 0 ? 'Add' : 'Edit'} Loan Type`}>
         <Formik
           enableReinitialize
           initialValues={initialValues}
           validationSchema={Yup.object().shape({
-            country_name: Yup.string().required('Country name is required'),
-            university_name: Yup.string().required('University name is required')
+            loan_type: Yup.string().required('Loan Type is required')
           })}
           onSubmit={async (values) => {
             try {
               setLoading(true);
               let response;
-              universityData._id
-                ? (response = await UpdateRequest('/university/edituniversity/', {
-                    country_name: values.country_name,
-                    university_name: values.university_name,
-                    id: universityData._id
+              loanType._id
+                ? (response = await UpdateRequest('/loantype/editloantype/', {
+                    loan_type: values.loan_type,
+                    id: loanType._id
                   }))
-                : (response = await PostRequest('/university/adduniversity', {
-                    country_name: values.country_name,
-                    university_name: values.university_name
+                : (response = await PostRequest('/loantype/addloantype', {
+                    loan_type: values.loan_type
                   }));
               if (response.response === true) {
                 showAlert(response.message, 'success');
                 setTimeout(() => {
                   setLoading(false);
-                  navigate('/setting/university');
+                  navigate('/setting/loantype');
                 }, 1000);
               } else {
                 setLoading(false);
@@ -86,41 +82,21 @@ const AddEditUniversity = () => {
               <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
                   <Grid item xs={12} md={6}>
-                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.country_name && errors.country_name)}>
+                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.loan_type && errors.loan_type)}>
                       <TextField
-                        id="outlined-adornment-country_name"
+                        id="outlined-adornment-loan_type"
                         type="text"
-                        value={values.country_name}
-                        name="country_name"
+                        value={values.loan_type}
+                        name="loan_type"
                         onBlur={handleBlur}
                         onChange={handleChange}
-                        label="Country Name"
-                        error={Boolean(touched.country_name && errors.country_name)}
+                        label="Loan Type"
+                        error={Boolean(touched.loan_type && errors.loan_type)}
                         variant="outlined" // Add this line
                       />
-                      {touched.country_name && errors.country_name && (
-                        <FormHelperText error id="standard-weight-helper-text-country_name">
-                          {errors.country_name}
-                        </FormHelperText>
-                      )}
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={6}>
-                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.university_name && errors.university_name)}>
-                      <TextField
-                        id="outlined-adornment-university_name"
-                        type="text"
-                        value={values.university_name}
-                        name="university_name"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="University Name"
-                        error={Boolean(touched.university_name && errors.university_name)}
-                        variant="outlined" // Add this line
-                      />
-                      {touched.university_name && errors.university_name && (
-                        <FormHelperText error id="standard-weight-helper-text-university_name">
-                          {errors.university_name}
+                      {touched.loan_type && errors.loan_type && (
+                        <FormHelperText error id="standard-weight-helper-text-loan_type">
+                          {errors.loan_type}
                         </FormHelperText>
                       )}
                     </FormControl>
@@ -151,4 +127,4 @@ const AddEditUniversity = () => {
   );
 };
 
-export default AddEditUniversity;
+export default AddEditLoanType;

@@ -25,21 +25,21 @@ const University = () => {
     {
       field: 'country_name',
       headerName: 'Country name',
-      width: 300,
+      width: 150,
       sortable: false,
       valueGetter: (params) => `${params.row.country_name || ''}`
     },
     {
       field: 'university_name',
       headerName: 'University name',
-      width: 300,
+      width: 550,
       sortable: false,
       valueGetter: (params) => `${params.row.university_name || ''}`
     },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 200,
+      width: 100,
       sortable: false,
       renderCell: (params) => (
         <>
@@ -77,10 +77,12 @@ const University = () => {
   }, []);
 
   const getAllUniversity = async () => {
+    setLoading(true);
     const response = await GetRequest('/university/getuniversity');
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
       setUniversityData(modifiedData);
+      setLoading(false);
     }
   };
 

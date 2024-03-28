@@ -30,7 +30,9 @@ import Transitions from 'ui-component/extended/Transitions';
 import NotificationList from './NotificationList';
 
 // assets
-import { IconBell } from '@tabler/icons-react';
+import { IconBell, IconBellRinging } from '@tabler/icons-react';
+import GetRequestOnRole from 'commonRequest/getRequestRole';
+import { Link as RouterLink } from 'react-router-dom';
 
 // notification status options
 const status = [
@@ -60,6 +62,10 @@ const NotificationSection = () => {
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
+  const [notificationData, setNotificationData] = useState([]);
+  const [hasNewNotification, setHasNewNotification] = useState(false);
+  const tokenValue = localStorage.getItem('token');
+  const userData = JSON.parse(tokenValue);
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
@@ -82,10 +88,24 @@ const NotificationSection = () => {
       anchorRef.current.focus();
     }
     prevOpen.current = open;
+    getAllNotification();
   }, [open]);
 
   const handleChange = (event) => {
+    console.log('event?.target.value :', event?.target.value);
     if (event?.target.value) setValue(event?.target.value);
+  };
+
+  const getAllNotification = async () => {
+    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
+    const response = await GetRequestOnRole('/notification/getnotification/', userid);
+    if (response.data) {
+      const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
+      setNotificationData(modifiedData);
+
+      const hasNew = response.data.some((notification) => !notification.isRead);
+      setHasNewNotification(hasNew);
+    }
   };
 
   return (
@@ -106,11 +126,11 @@ const NotificationSection = () => {
               ...theme.typography.commonAvatar,
               ...theme.typography.mediumAvatar,
               transition: 'all .2s ease-in-out',
-              background: theme.palette.secondary.light,
-              color: theme.palette.secondary.dark,
+              background: hasNewNotification ? theme.palette.warning.main : theme.palette.secondary.light,
+              color: hasNewNotification ? theme.palette.warning.dark : theme.palette.secondary.dark,
               '&[aria-controls="menu-list-grow"],&:hover': {
-                background: theme.palette.secondary.dark,
-                color: theme.palette.secondary.light
+                background: hasNewNotification ? theme.palette.warning.dark : theme.palette.secondary.dark,
+                color: hasNewNotification ? theme.palette.warning.light : theme.palette.secondary.light
               }
             }}
             ref={anchorRef}
@@ -119,7 +139,13 @@ const NotificationSection = () => {
             onClick={handleToggle}
             color="inherit"
           >
-            <IconBell stroke={1.5} size="1.3rem" />
+            {hasNewNotification ? (
+              <div className="ringing-bell">
+                <IconBellRinging stroke={1.5} size="1.5rem" />
+              </div>
+            ) : (
+              <IconBell stroke={1.5} size="1.3rem" />
+            )}
           </Avatar>
         </ButtonBase>
       </Box>
@@ -154,7 +180,7 @@ const NotificationSection = () => {
                             <Typography variant="subtitle1">All Notification</Typography>
                             <Chip
                               size="small"
-                              label="01"
+                              label={notificationData.length}
                               sx={{
                                 color: theme.palette.background.default,
                                 bgcolor: theme.palette.warning.dark
@@ -196,13 +222,13 @@ const NotificationSection = () => {
                             <Divider sx={{ my: 0 }} />
                           </Grid>
                         </Grid>
-                        <NotificationList />
+                        <NotificationList notificationlist={notificationData} />
                       </PerfectScrollbar>
                     </Grid>
                   </Grid>
                   <Divider />
                   <CardActions sx={{ p: 1.25, justifyContent: 'center' }}>
-                    <Button size="small" disableElevation>
+                    <Button size="small" component={RouterLink} to="/notification">
                       View All
                     </Button>
                   </CardActions>

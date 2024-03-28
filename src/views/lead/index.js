@@ -3,57 +3,48 @@ import { Grid, Box, Button } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import CommonTable from 'ui-component/table/CommonTable';
 import { useEffect, useState } from 'react';
-import GetRequest from 'commonRequest/getRequest';
-import { styled } from '@mui/system';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import DeleteRequest from 'commonRequest/deleteRequest';
 import Swal from 'sweetalert2';
 import { useAlert } from 'ui-component/alert/alert';
 import { useNavigate } from 'react-router';
+import GetRequestOnRole from 'commonRequest/getRequestRole';
 
-const StyledTooltip = styled('div')({
-  cursor: 'pointer'
-});
 // project imports
 
 // ==============================|| SAMPLE PsAGE ||============================== //
 
 const Lead = () => {
-  const [staffData, setStaffData] = useState([]);
+  const [leadData, setLeadData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const tokenValue = localStorage.getItem('token');
+  const userData = JSON.parse(tokenValue);
   const columns = [
     { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'first_name',
-      headerName: 'First name',
+      field: 'student_name',
+      headerName: 'Student name',
       width: 150,
       sortable: false,
-      valueGetter: (params) => `${params.row.first_name || ''}`
-    },
-    {
-      field: 'last_name',
-      headerName: 'Last name',
-      width: 150,
-      sortable: false,
-      valueGetter: (params) => `${params.row.last_name || ''}`
-    },
-    {
-      field: 'email',
-      headerName: 'Email',
-      width: 200,
-      valueGetter: (params) => {
-        const email = params.row.email || '';
-        if (email.length > 20) {
-          return `${email.substr(0, 20)}...`; // Show first 20 characters with ellipsis
-        }
-        return email;
-      },
-      renderCell: (params) => <StyledTooltip title={params.row.email}>{params.value}</StyledTooltip>
+      valueGetter: (params) => `${params.row.student_name || ''}`
     },
     { field: 'phone', headerName: 'Phone Number', width: 130 },
-    { field: 'user_status', headerName: 'Status', width: 100 },
+    { field: 'country', headerName: 'Country', width: 150 },
+    {
+      field: 'loantypeDetails.loan_type',
+      headerName: 'Loan Type',
+      width: 200,
+      valueGetter: (params) => (params.row.loantypeDetails ? params.row.loantypeDetails.loan_type || '' : '')
+    },
+    {
+      field: 'universityDetails.university_name',
+      headerName: 'University',
+      width: 300,
+      valueGetter: (params) => (params.row.universityDetails ? params.row.universityDetails.university_name || '' : '')
+    },
     {
       field: 'actions',
       headerName: 'Actions',
@@ -91,24 +82,22 @@ const Lead = () => {
   ];
 
   useEffect(() => {
-    getAllStaff();
+    getAllLead();
   }, []);
 
-  const getAllStaff = async () => {
-    const response = await GetRequest('/staff/getstaff');
+  const getAllLead = async () => {
+    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
+    setLoading(true);
+    const response = await GetRequestOnRole('/student/getlead/', userid);
     if (response.data) {
-      const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.user_status }));
-      setStaffData(modifiedData);
+      const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
+      setLeadData(modifiedData);
+      setLoading(false);
     }
   };
 
-  const getStatusText = (status) => (status ? 'Active' : 'Inactive');
-  const columnsWithStatusText = columns.map((col) =>
-    col.field === 'user_status' ? { ...col, valueGetter: (params) => getStatusText(params.row.status) } : col
-  );
-
   const handleEdit = async (id) => {
-    navigate('/staff/addstaff', { state: id });
+    navigate('/lead/addeditlead', { state: id });
   };
   const handleDelete = (id) => {
     Swal.fire({
@@ -122,11 +111,11 @@ const Lead = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await DeleteRequest('/staff/deletestaff/', id);
+        const response = await DeleteRequest('/student/deletestudent/', id);
         if (response.response == true) {
           showAlert(response.message, 'success');
           setTimeout(() => {
-            getAllStaff();
+            getAllLead();
           }, 1000);
         } else {
           showAlert(response.message, 'error');
@@ -140,7 +129,7 @@ const Lead = () => {
         <Grid item xs={12}>
           <MainCard title={'Lead Details'} subtitle={true} buttonname={'Add New Lead'} redirectlink={'addeditlead'}>
             <Box sx={{ width: '100%', typography: 'subtitle1' }}>
-              <CommonTable rows={staffData} columns={columnsWithStatusText} />
+              <CommonTable rows={leadData} columns={columns} isloading={loading} />
             </Box>
           </MainCard>
         </Grid>

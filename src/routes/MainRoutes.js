@@ -23,6 +23,11 @@ const University = Loadable(lazy(() => import('views/settings/university/index')
 const AddEditUniversity = Loadable(lazy(() => import('views/settings/university/AddUniversity')));
 const CourseType = Loadable(lazy(() => import('views/settings/coursetype/index')));
 const AddEditCourseType = Loadable(lazy(() => import('views/settings/coursetype/AddCourseType')));
+const Student = Loadable(lazy(() => import('views/student/index')));
+const AddEditStudent = Loadable(lazy(() => import('views/student/addStudent')));
+const Loantype = Loadable(lazy(() => import('views/settings/loanType/index')));
+const AddEditLoanType = Loadable(lazy(() => import('views/settings/loanType/addLoanType')));
+const Notification = Loadable(lazy(() => import('views/notification/index')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -152,6 +157,51 @@ const MainRoutes = {
         {
           path: 'addcoursetype',
           element: <AddEditCourseType />
+        }
+      ]
+    },
+    {
+      path: 'student',
+      children: [
+        {
+          path: '',
+          element: <Student />
+        }
+      ]
+    },
+    {
+      path: 'student',
+      children: [
+        {
+          path: 'addeditstudent',
+          element: <AddEditStudent />
+        }
+      ]
+    },
+    {
+      path: 'setting/loantype',
+      children: [
+        {
+          path: '',
+          element: <Loantype />
+        }
+      ]
+    },
+    {
+      path: 'setting/loantype',
+      children: [
+        {
+          path: 'addloantype',
+          element: <AddEditLoanType />
+        }
+      ]
+    },
+    {
+      path: 'notification',
+      children: [
+        {
+          path: '',
+          element: <Notification />
         }
       ]
     }
