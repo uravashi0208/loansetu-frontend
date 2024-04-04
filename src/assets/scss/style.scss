@@ -145,3 +145,54 @@
 .ringing-bell {
   animation: ringing 0.5s infinite;
 }
+.dialogNoRadius {
+  border-radius: 5px !important;
+  width: 800px !important;
+  height: 900px !important;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 4px;
+  height: 4px
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 3px;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.folloupdialogNoRadius {
+  border-radius: 5px !important;
+  width: 400px !important;
+  height: 320px !important;
+}
+
+.leadassigndialogNoRadius {
+  border-radius: 5px !important;
+  width: 400px !important;
+  height: 230px !important;
+}
+
+.leadstatuschnagedialogNoRadius {
+  border-radius: 5px !important;
+  width: 400px !important;
+  height: 200px !important;
+}
+
+.leadupdatedialogNoRadius {
+  border-radius: 5px !important;
+  width: 750px !important;
+  height: 600px !important;
+}

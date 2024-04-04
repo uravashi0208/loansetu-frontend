@@ -4,7 +4,7 @@ import { Box, CircularProgress } from '@mui/material';
 
 const CommonTable = ({ rows, columns, isloading }) => {
   return (
-    <div style={{ width: '100%', display: 'flex', justifyContent: 'center' }}>
+    <>
       {isloading ? (
         <CircularProgress size={24} color="inherit" />
       ) : rows.length > 0 ? (
@@ -17,11 +17,12 @@ const CommonTable = ({ rows, columns, isloading }) => {
             }
           }}
           pageSizeOptions={[10, 15, 20]}
+          // slots={{ toolbar: GridToolbar }}
         />
       ) : (
         <Box sx={{ width: '100%', typography: 'subtitle1', textAlign: 'center' }}>No Data found</Box>
       )}
-    </div>
+    </>
   );
 };
 export default CommonTable;

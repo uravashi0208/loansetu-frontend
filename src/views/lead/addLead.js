@@ -101,6 +101,7 @@ const AddEditLead = () => {
     remark: studentData.remark ? studentData.remark : '',
     isLead: true,
     createdBy: roleData.data._id,
+    reference: studentData.reference ? studentData.reference : '',
     submit: null
   };
   return (
@@ -346,6 +347,20 @@ const AddEditLead = () => {
                             </MenuItem>
                           ))}
                         </Select>
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={6}>
+                      <FormControl fullWidth>
+                        <TextField
+                          id="outlined-adornment-email-login"
+                          type="text"
+                          value={values.reference}
+                          name="reference"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Reference"
+                          variant="outlined" // Add this line
+                        />
                       </FormControl>
                     </Grid>
                   </Grid>

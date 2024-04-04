@@ -92,7 +92,6 @@ const NotificationSection = () => {
   }, [open]);
 
   const handleChange = (event) => {
-    console.log('event?.target.value :', event?.target.value);
     if (event?.target.value) setValue(event?.target.value);
   };
 

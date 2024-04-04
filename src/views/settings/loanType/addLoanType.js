@@ -13,7 +13,7 @@ import { useAlert } from 'ui-component/alert/alert';
 
 // project imports
 
-// ==============================|| SAMPLE PsAGE ||============================== //
+// ==============================|| SAMPLE PAGE ||============================== //
 
 const AddEditLoanType = () => {
   const [loading, setLoading] = useState(false);

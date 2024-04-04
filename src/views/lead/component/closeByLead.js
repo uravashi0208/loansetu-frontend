@@ -1,40 +1,52 @@
 // material-ui
-import { Grid, Box, Button } from '@mui/material';
-import GetRequest from 'commonRequest/getRequest';
-import { useEffect, useState } from 'react';
-import MainCard from 'ui-component/cards/MainCard';
+import { Button } from '@mui/material';
 import CommonTable from 'ui-component/table/CommonTable';
+import { useEffect, useState } from 'react';
 import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
 import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import Swal from 'sweetalert2';
 import DeleteRequest from 'commonRequest/deleteRequest';
-import { useNavigate } from 'react-router';
+import Swal from 'sweetalert2';
 import { useAlert } from 'ui-component/alert/alert';
+import { useNavigate } from 'react-router';
+import GetRequestOnRole from 'commonRequest/getRequestRole';
 
 // project imports
 
 // ==============================|| SAMPLE PAGE ||============================== //
 
-const University = () => {
-  const [universityData, setUniversityData] = useState([]);
+const CloseByLead = ({ userData }) => {
+  const [leadData, setLeadData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const columns = [
-    { field: 'id', headerName: 'ID', width: 100, valueGetter: (params) => params.row.id + 1 },
+    { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'country_name',
-      headerName: 'Country name',
+      field: 'student_name',
+      headerName: 'Student name',
       width: 150,
       sortable: false,
-      valueGetter: (params) => `${params.row.country_name || ''}`
+      valueGetter: (params) => `${params.row.student_name || ''}`
+    },
+    { field: 'phone', headerName: 'Phone Number', width: 130 },
+    {
+      field: 'userDetails.user_name',
+      headerName: 'Created By',
+      width: 150,
+      valueGetter: (params) => (params.row.userDetails ? params.row.userDetails.user_name || '' : '')
+    },
+    { field: 'country', headerName: 'Country', width: 150 },
+    {
+      field: 'loantypeDetails.loan_type',
+      headerName: 'Loan Type',
+      width: 200,
+      valueGetter: (params) => (params.row.loantypeDetails ? params.row.loantypeDetails.loan_type || '' : '')
     },
     {
-      field: 'university_name',
-      headerName: 'University name',
-      width: 550,
-      sortable: false,
-      valueGetter: (params) => `${params.row.university_name || ''}`
+      field: 'universityDetails.university_name',
+      headerName: 'University',
+      width: 300,
+      valueGetter: (params) => (params.row.universityDetails ? params.row.universityDetails.university_name || '' : '')
     },
     {
       field: 'actions',
@@ -73,25 +85,28 @@ const University = () => {
   ];
 
   useEffect(() => {
-    getAllUniversity();
+    getAllLead();
   }, []);
 
-  const getAllUniversity = async () => {
+  const getAllLead = async () => {
+    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
     setLoading(true);
-    const response = await GetRequest('/university/getuniversity');
+    const response = await GetRequestOnRole('/student/getclosebylead/', userid);
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
-      setUniversityData(modifiedData);
+      setLeadData(modifiedData);
+      setLoading(false);
+    } else {
       setLoading(false);
     }
   };
 
   const handleEdit = async (id) => {
-    navigate('/setting/university/adduniversity', { state: id });
+    navigate('/lead/addeditlead', { state: id });
   };
-
   const handleDelete = (id) => {
     Swal.fire({
+      // Use Swal.fire() instead of Swal()
       title: 'Are you sure?',
       text: 'Once deleted, you will not be able to recover this details!',
       icon: 'warning',
@@ -101,16 +116,13 @@ const University = () => {
       confirmButtonText: 'Yes, delete it!'
     }).then(async (result) => {
       if (result.isConfirmed) {
-        const response = await DeleteRequest('/university/deleteuniversity/', id);
+        const response = await DeleteRequest('/student/deletestudent/', id);
         if (response.response == true) {
           showAlert(response.message, 'success');
           setTimeout(() => {
-            getAllUniversity();
-            setLoading(false);
+            getAllLead();
           }, 1000);
         } else {
-          setLoading(false);
-          s;
           showAlert(response.message, 'error');
         }
       }
@@ -119,18 +131,10 @@ const University = () => {
 
   return (
     <>
-      <Grid container>
-        <Grid item xs={12}>
-          <MainCard title={'University'} subtitle={true} buttonname={'Add New University'} redirectlink={'adduniversity'}>
-            <Box sx={{ width: '100%', typography: 'subtitle1' }}>
-              <CommonTable rows={universityData} columns={columns} isloading={loading} />
-            </Box>
-          </MainCard>
-        </Grid>
-      </Grid>
+      <CommonTable rows={leadData} columns={columns} isloading={loading} />
       <AlertComponent />
     </>
   );
 };
 
-export default University;
+export default CloseByLead;

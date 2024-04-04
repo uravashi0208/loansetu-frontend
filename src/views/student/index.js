@@ -17,7 +17,7 @@ const StyledTooltip = styled('div')({
 });
 // project imports
 
-// ==============================|| SAMPLE PsAGE ||============================== //
+// ==============================|| SAMPLE PAGE ||============================== //
 
 const Studentss = () => {
   const [studentData, setStudentData] = useState([]);

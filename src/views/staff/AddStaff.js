@@ -6,7 +6,7 @@ import StaffPermission from './StaffPermission';
 
 // project imports
 
-// ==============================|| SAMPLE PsAGE ||============================== //
+// ==============================|| SAMPLE PAGE ||============================== //
 
 const AddStaff = () => {
   return (

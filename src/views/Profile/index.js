@@ -20,10 +20,10 @@ const Profile = () => {
                     <Box sx={{ width: '100%', typography: 'subtitle1' }}>
                         <TabContext value={value}>
                             <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                            <TabList onChange={handleChange} aria-label="lab API tabs example">
-                                <Tab label="Profile" value="1" />
-                                <Tab label="Security" value="2" />
-                            </TabList>
+                                <TabList onChange={handleChange} aria-label="lab API tabs example">
+                                    <Tab label="Profile" value="1" />
+                                    <Tab label="Security" value="2" />
+                                </TabList>
                             </Box>
                             <TabPanel value="1"><ProfileDetails /></TabPanel>
                             <TabPanel value="2"><ChangePassword /></TabPanel>

@@ -35,7 +35,7 @@ import UpdateFormRequest from 'commonRequest/updatefoemRequest';
 
 // project imports
 
-// ==============================|| SAMPLE PsAGE ||============================== //
+// ==============================|| SAMPLE PAGE ||============================== //
 
 const StaffProfile = () => {
   const navigate = useNavigate();
@@ -156,7 +156,6 @@ const StaffProfile = () => {
                 showAlert(response.message, 'error');
               }
             } catch (err) {
-              console.log('err :', err);
               setLoading(false);
             }
           }}

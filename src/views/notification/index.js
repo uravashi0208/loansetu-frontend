@@ -7,7 +7,7 @@ import GetRequestOnRole from 'commonRequest/getRequestRole';
 
 // project imports
 
-// ==============================|| SAMPLE PsAGE ||============================== //
+// ==============================|| SAMPLE PAGE ||============================== //
 
 const Notification = () => {
   const [notificationData, setNotificationData] = useState([]);
