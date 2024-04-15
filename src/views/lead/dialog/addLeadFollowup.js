@@ -2,7 +2,19 @@ import React, { useState } from 'react';
 import Dialog from '@mui/material/Dialog';
 import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
-import { Button, FormControl, FormHelperText, Grid, IconButton, TextField, Typography } from '@mui/material';
+import {
+  Button,
+  FormControl,
+  FormControlLabel,
+  FormHelperText,
+  Grid,
+  IconButton,
+  Radio,
+  RadioGroup,
+  TextField,
+  Typography,
+  FormLabel
+} from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from 'yup';
 
@@ -18,13 +30,16 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
   const tokenValue = localStorage.getItem('token');
   const userData = JSON.parse(tokenValue);
   const initialValues = {
+    current_followup_date: '',
+    current_followup_comment: '',
     next_followup_date: '',
-    comment: ''
+    next_followup_comment: '',
+    followup_place: '' // Default to 'call'
   };
 
   return (
     <>
-      <Dialog open={open} onClose={handleClose} maxWidth="xl" classes={{ paper: 'folloupdialogNoRadius' }}>
+      <Dialog open={open} onClose={handleClose} maxWidth="xl" classes={{ paper: 'followupdialogNoRadius' }}>
         <DialogTitle sx={{ backgroundColor: '#070d59' }}>
           <Typography variant="h4" color="#ffffff">
             Add Followup
@@ -73,16 +88,20 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
             initialValues={initialValues}
             validationSchema={Yup.object().shape({
               next_followup_date: Yup.string().required('Next Folloup Date is required'),
-              comment: Yup.string().required('Comment is required')
+              next_followup_comment: Yup.string().required('Comment is required'),
+              followup_place: Yup.string().required('Follow-up Place is required')
             })}
             onSubmit={async (values, { setSubmitting }) => {
               try {
                 setLoading(true);
                 let response = await PostRequest('/leadfollowup/addleadfollowup', {
-                  next_followup_date: values.next_followup_date,
-                  comment: values.comment,
                   student_id: selectedLead._id,
-                  createdby: userData.data._id
+                  createdby: userData.data._id,
+                  current_followup_date: values.current_followup_date,
+                  current_followup_comment: values.current_followup_comment,
+                  next_followup_date: values.next_followup_date,
+                  next_followup_comment: values.next_followup_comment,
+                  followup_place: values.followup_place
                 });
                 if (response.response === true) {
                   showAlert(response.message, 'success');
@@ -93,7 +112,6 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
                   showAlert(response.message, 'error');
                 }
               } catch (err) {
-                console.log('err :', err);
                 setLoading(false);
               } finally {
                 setSubmitting(false); // Ensure form submission state is updated
@@ -105,6 +123,37 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
                 <Grid item xs={12}>
                   <Grid container>
                     <Grid item xs={12} md={12}>
+                      <FormControl sx={{ marginBottom: '12px' }} fullWidth>
+                        <TextField
+                          id="outlined-adornment-current_followup_date"
+                          type="datetime-local"
+                          value={values.current_followup_date}
+                          name="current_followup_date"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          variant="outlined" // Add this line
+                          // label={<InputLabel shrink>Next Follow Up Date (dd-mm-yyyy)</InputLabel>}
+                          InputLabelProps={{ shrink: true }}
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <FormControl sx={{ marginBottom: '12px' }} fullWidth>
+                        <TextField
+                          id="outlined-adornment-current_followup_comment-login"
+                          multiline
+                          value={values.current_followup_comment}
+                          name="current_followup_comment"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Current Follow Up Comment"
+                          rows={4}
+                          variant="outlined" // Add this line
+                          maxDate={new Date()}
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
                       <FormControl
                         sx={{ marginBottom: '12px' }}
                         fullWidth
@@ -112,13 +161,14 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
                       >
                         <TextField
                           id="outlined-adornment-next_followup_date"
-                          type="date"
+                          type="datetime-local"
                           value={values.next_followup_date}
                           name="next_followup_date"
                           onBlur={handleBlur}
                           onChange={handleChange}
                           error={Boolean(touched.next_followup_date && errors.next_followup_date)}
                           variant="outlined" // Add this line
+                          // label="Next Follow Up Date"
                         />
                         {touched.next_followup_date && errors.next_followup_date && (
                           <FormHelperText error id="standard-weight-helper-text-next_followup_date">
@@ -128,23 +178,40 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={12}>
-                      <FormControl fullWidth error={Boolean(touched.comment && errors.comment)}>
+                      <FormControl
+                        fullWidth
+                        sx={{ marginBottom: '12px' }}
+                        error={Boolean(touched.next_followup_comment && errors.next_followup_comment)}
+                      >
                         <TextField
-                          id="outlined-adornment-comment-login"
+                          id="outlined-adornment-next_followup_comment-login"
                           multiline
-                          value={values.comment}
-                          name="comment"
+                          value={values.next_followup_comment}
+                          name="next_followup_comment"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          label="comment"
+                          label="Next Follow Up Comment"
                           rows={4}
                           variant="outlined" // Add this line
+                          maxDate={new Date()}
                         />
-                        {touched.comment && errors.comment && (
-                          <FormHelperText error id="standard-weight-helper-text-comment">
-                            {errors.comment}
+                        {touched.next_followup_comment && errors.next_followup_comment && (
+                          <FormHelperText error id="standard-weight-helper-text-next_followup_comment">
+                            {errors.next_followup_comment}
                           </FormHelperText>
                         )}
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={12}>
+                      <FormControl component="fieldset" error={Boolean(touched.followup_place && errors.followup_place)}>
+                        <FormLabel component="legend">Follow-up Place</FormLabel>
+                        <RadioGroup aria-label="followup_place" name="followup_place" value={values.followup_place} onChange={handleChange}>
+                          <FormControlLabel value="call" control={<Radio />} label="Call" />
+                          <FormControlLabel value="at_office" control={<Radio />} label="At Office" />
+                          <FormControlLabel value="at_home" control={<Radio />} label="At Home" />
+                          <FormControlLabel value="whatsapp" control={<Radio />} label="WhatsApp" />
+                        </RadioGroup>
+                        {touched.followup_place && errors.followup_place && <FormHelperText error>{errors.followup_place}</FormHelperText>}
                       </FormControl>
                     </Grid>
                   </Grid>

@@ -89,7 +89,8 @@ const AddEditLead = () => {
   };
 
   const initialValues = {
-    assigne_staff: roleData.data.role === 'staff' ? roleData.data._id : studentData.assigne_staff ? studentData.assigne_staff : '',
+    assigne_staff:
+      roleData.data.role === 'staff' ? roleData.data._id : studentData.assigne_staff ? studentData.assigne_staff : roleData.data._id,
     student_name: studentData.student_name ? studentData.student_name : '',
     phone: studentData.phone ? studentData.phone : '',
     email: studentData.email ? studentData.email : '',
@@ -162,7 +163,7 @@ const AddEditLead = () => {
                             </MenuItem>
                             {staff.map((option) => (
                               <MenuItem key={option._id} value={option._id}>
-                                {option.first_name}
+                                {option.user_name}
                               </MenuItem>
                             ))}
                           </Select>

@@ -35,6 +35,14 @@ const other = {
       breadcrumbs: false
     },
     {
+      id: 'customer',
+      title: 'Customer',
+      type: 'item',
+      url: '/customer',
+      icon: icons.IconSchool,
+      breadcrumbs: false
+    },
+    {
       id: 'notification',
       title: 'Notification',
       type: 'item',

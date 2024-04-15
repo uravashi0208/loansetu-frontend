@@ -5,8 +5,8 @@ import { useState } from 'react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import NewLead from './component/newLead';
 import ProcessingLead from './component/processingLead';
-import CloseByLead from './component/closeByLead';
-import ConfirmLead from './component/confirmLead';
+// import CloseByLead from './component/closeByLead';
+// import ConfirmLead from './component/confirmLead';
 import CancelLead from './component/CancelLead';
 
 // project imports
@@ -31,9 +31,9 @@ const Lead = () => {
                 <TabList onChange={handleChange} aria-label="lab API tabs example">
                   <Tab label="New Lead" value="1" />
                   <Tab label="Processing Lead" value="2" />
-                  <Tab label="Close By Lead" value="3" />
-                  <Tab label="Confirm Lead" value="4" />
-                  <Tab label="Cancel Lead" value="5" />
+                  {/* <Tab label="Close By Lead" value="3" />
+                  <Tab label="Confirm Lead" value="4" /> */}
+                  <Tab label="Cancel Lead" value="3" />
                 </TabList>
               </Box>
               <TabPanel value="1">
@@ -42,13 +42,13 @@ const Lead = () => {
               <TabPanel value="2">
                 <ProcessingLead userData={userData} />
               </TabPanel>
-              <TabPanel value="3">
+              {/* <TabPanel value="3">
                 <CloseByLead userData={userData} />
               </TabPanel>
               <TabPanel value="4">
                 <ConfirmLead userData={userData} />
-              </TabPanel>
-              <TabPanel value="5">
+              </TabPanel> */}
+              <TabPanel value="3">
                 <CancelLead userData={userData} />
               </TabPanel>
             </TabContext>

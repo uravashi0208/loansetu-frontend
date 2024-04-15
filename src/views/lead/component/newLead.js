@@ -13,9 +13,9 @@ import moment from 'moment';
 
 const NewLead = ({ userData }) => {
   const [leadData, setLeadData] = useState([]);
-  const [selectedLead, setSelectedLead] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [selectedLead, setSelectedLead] = useState([]);
   const columns = [
     { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
     {
@@ -97,7 +97,6 @@ const NewLead = ({ userData }) => {
     <>
       <CommonTable rows={leadData} columns={columns} isloading={loading} />
       <LeadDialog open={openDialog} handleClose={handleCloseDialog} selectedLead={selectedLead} />
-      {/* <AlertComponent /> */}
     </>
   );
 };

@@ -1,7 +1,9 @@
 import { Card, CardContent, CardHeader, Divider, Grid, Typography } from '@mui/material';
 import { useTheme } from '@mui/material/styles';
 import { Box } from '@mui/system';
+// import GetByIdRequest from 'commonRequest/getByIdRequest';
 import moment from 'moment';
+// import { useEffect, useState } from 'react';
 import { gridSpacing } from 'store/constant';
 
 const headerSX = {
@@ -11,8 +13,18 @@ const headerSX = {
   padding: '15px',
   backgroundColor: '#070d59'
 };
-
+``;
 const LeadDetails = ({ selectedLead }) => {
+  // getleadbyid;
+  // const [studentData, setStudentData] = useState([]);
+  // useEffect(() => {
+  //   getStudentById(selectedLead._id);
+  // }, []);
+  // const getStudentById = async (id) => {
+  //   const response = await GetByIdRequest('/student/getleadbyid/', id);
+  //   setStudentData(response.data);
+  // };
+
   const theme = useTheme();
   return (
     <>

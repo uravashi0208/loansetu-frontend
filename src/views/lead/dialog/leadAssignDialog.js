@@ -133,7 +133,7 @@ const AssignLead = ({ open, handleClose, selectedLead }) => {
                           </MenuItem>
                           {staff.map((option) => (
                             <MenuItem key={option._id} value={option._id}>
-                              {option.first_name}
+                              {option.user_name}
                             </MenuItem>
                           ))}
                         </Select>

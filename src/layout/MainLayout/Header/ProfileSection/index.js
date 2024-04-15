@@ -43,12 +43,26 @@ const ProfileSection = () => {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [open, setOpen] = useState(false);
   const [userData, setUserData] = useState([]);
+  const now = new Date();
+  const hour = now.getHours();
+
+  let greeting;
+
+  if (hour >= 5 && hour < 12) {
+    greeting = 'Good Morning,';
+  } else if (hour >= 12 && hour < 18) {
+    greeting = 'Good Afternoon,';
+  } else if (hour >= 18 && hour < 22) {
+    greeting = 'Good Evening,';
+  } else {
+    greeting = 'Good Night,';
+  }
   /**
    * anchorRef is used on different componets and specifying one type leads to other components throwing an error
    * */
   const anchorRef = useRef(null);
   const handleLogout = () => {
-    localStorage.removeItem("token");
+    localStorage.removeItem('token');
     navigate('/login');
   };
 
@@ -81,11 +95,11 @@ const ProfileSection = () => {
   }, [open]);
 
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      const tokenValue = localStorage.getItem("token");
+    if (localStorage.getItem('token')) {
+      const tokenValue = localStorage.getItem('token');
       setUserData(JSON.parse(tokenValue));
     }
-  }, []); 
+  }, []);
   return (
     <>
       <Chip
@@ -156,14 +170,14 @@ const ProfileSection = () => {
                   <Box sx={{ p: 2 }}>
                     <Stack>
                       <Stack direction="row" spacing={0.5} alignItems="center">
-                        <Typography variant="h4">Good Morning,</Typography>
+                        <Typography variant="h4">{greeting}</Typography>
                         <Typography component="span" variant="h4" sx={{ fontWeight: 400 }}>
                           {userData.data.user_name}
                         </Typography>
                       </Stack>
                       <Typography variant="subtitle2">{userData.data.role}</Typography>
                     </Stack>
-                    <Divider/>
+                    <Divider />
                   </Box>
                   <PerfectScrollbar style={{ height: '100%', maxHeight: 'calc(100vh - 220px)', overflowX: 'hidden' }}>
                     <Box sx={{ p: 2 }}>

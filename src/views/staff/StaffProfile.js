@@ -617,7 +617,7 @@ const StaffProfile = () => {
                             <em>None</em>
                           </MenuItem>
                           <MenuItem value={'sales'}>Sales</MenuItem>
-                          <MenuItem value={'serice'}>Service</MenuItem>
+                          <MenuItem value={'service'}>Service</MenuItem>
                         </Select>
                         {touched.staff_team && errors.staff_team && (
                           <FormHelperText error id="standard-weight-helper-text-staff_team-login">

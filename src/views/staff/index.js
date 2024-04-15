@@ -52,6 +52,7 @@ const Staff = () => {
       renderCell: (params) => <StyledTooltip title={params.row.email}>{params.value}</StyledTooltip>
     },
     { field: 'phone', headerName: 'Phone Number', width: 130 },
+    { field: 'staff_team', headerName: 'Staff Type', width: 100 },
     { field: 'user_status', headerName: 'Status', width: 100 },
     {
       field: 'download',
@@ -174,7 +175,8 @@ const Staff = () => {
     const response = await GetRequest('/staff/getstaff');
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.user_status }));
-      setStaffData(modifiedData);
+      const staffRecords = modifiedData.filter((record) => record.role === 'staff');
+      setStaffData(staffRecords);
       setLoading(false);
     }
   };

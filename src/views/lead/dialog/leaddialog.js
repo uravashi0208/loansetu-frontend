@@ -4,7 +4,8 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogTitle from '@mui/material/DialogTitle';
 import IconButton from '@mui/material/IconButton';
 import CloseIcon from '@mui/icons-material/Close';
-import { Tab, Tooltip, Typography } from '@mui/material';
+import { Button, DialogActions, Paper, Tab, Tooltip, Typography } from '@mui/material';
+import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 // Importing icons from @tabler/icons-react
 import { IconEdit, IconSend, IconTrendingUp, IconUserPlus, IconTrash, IconStatusChange } from '@tabler/icons-react';
@@ -17,6 +18,10 @@ import LeadFollowUp from '../leaddetails/leadFolloUp';
 import AssignLead from './leadAssignDialog';
 import ChangeLeadStatus from './changeStatusDialog';
 import LeadUpdate from './leadEditDialog';
+import { styled } from '@mui/material/styles';
+import LeadConvertToCustomer from './convertToCustomer';
+import UpdateFormRequest from 'commonRequest/updatefoemRequest';
+import { useAlert } from 'ui-component/alert/alert';
 
 const LeadDialog = ({ open, handleClose, selectedLead }) => {
   const [value, setValue] = useState('1');
@@ -24,6 +29,11 @@ const LeadDialog = ({ open, handleClose, selectedLead }) => {
   const [openDialog, setOpenDialog] = useState(false);
   const [leadAssignToOpenDialog, setLeadAssignToOpenDialog] = useState(false);
   const [changeStatusOpenDialog, setChangeStatusOpenDialog] = useState(false);
+  const [convertToCustomerDialog, setConvertToCustomerOpenDialog] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const { showAlert, AlertComponent } = useAlert();
+  const tokenValue = localStorage.getItem('token');
+  const userData = JSON.parse(tokenValue);
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -61,6 +71,35 @@ const LeadDialog = ({ open, handleClose, selectedLead }) => {
     setChangeStatusOpenDialog(false);
   };
 
+  const handleConvertCustomer = () => {
+    setIsOpen(true);
+  };
+
+  const handleLeadConvertToCustomerOpenDialog = async () => {
+    const valuesWithDetails = {
+      createdby: userData.data._id,
+      leadconvert: 'leadcovertcustomer'
+    };
+    let response = await UpdateFormRequest('/student/editstudent/', valuesWithDetails, selectedLead._id);
+    if (response.response === true) {
+      showAlert(response.message, 'success');
+    } else {
+      showAlert(response.message, 'error');
+    }
+    setIsOpen(false);
+    setConvertToCustomerOpenDialog(true);
+  };
+
+  const handleConvertToCustomerCloseDialog = () => {
+    setConvertToCustomerOpenDialog(false);
+  };
+
+  const StyledPaper = styled(Paper)`
+    width: 350px !important;
+    height: 280px !important;
+    padding: 0px 20px;
+    color: inherit;
+  `;
   return (
     <>
       <Dialog open={open} onClose={handleClose} maxWidth="xl" classes={{ paper: 'dialogNoRadius' }}>
@@ -121,7 +160,7 @@ const LeadDialog = ({ open, handleClose, selectedLead }) => {
               />
             </Tooltip>
             <Tooltip title="Convert To Customer">
-              <IconUserPlus style={{ marginLeft: '40px', cursor: 'pointer' }} />
+              <IconUserPlus style={{ marginLeft: '40px', cursor: 'pointer' }} onClick={() => handleConvertCustomer()} />
             </Tooltip>
             <Tooltip title="Delete Lead">
               <IconTrash style={{ marginLeft: '40px', cursor: 'pointer' }} />
@@ -156,7 +195,27 @@ const LeadDialog = ({ open, handleClose, selectedLead }) => {
       <LeadUpdate open={leadupdateOpenDialog} handleClose={handleLeadupdateCloseDialog} selectedLead={selectedLead} />
       <AddLeadFollowUp open={openDialog} handleClose={handleCloseDialog} selectedLead={selectedLead} />
       <AssignLead open={leadAssignToOpenDialog} handleClose={handleLeadAssignToCloseDialog} selectedLead={selectedLead} />
+      <LeadConvertToCustomer open={convertToCustomerDialog} handleClose={handleConvertToCustomerCloseDialog} selectedLead={selectedLead} />
       <ChangeLeadStatus open={changeStatusOpenDialog} handleClose={handleChangeStatusCloseDialog} selectedLead={selectedLead} />
+      <Dialog onClose={() => setIsOpen(false)} open={isOpen} PaperComponent={StyledPaper}>
+        <DialogTitle style={{ textAlign: 'center' }}>
+          <ErrorOutlineOutlinedIcon style={{ fontSize: 100, color: '#f8bb86' }} />
+        </DialogTitle>
+        <DialogContent sx={{ padding: '0px 20px', textAlign: 'center', color: 'inherit' }}>
+          <Typography variant="h3" sx={{ color: '#756d6d' }}>
+            Are You Sure You Want To Convert This Lead To Customer ?
+          </Typography>
+        </DialogContent>
+        <DialogActions sx={{ display: 'flex', justifyContent: 'center', marginBottom: '10px', marginTop: '5px' }}>
+          <Button variant="contained" onClick={() => handleLeadConvertToCustomerOpenDialog(selectedLead._id)}>
+            Yes,Convert!
+          </Button>
+          <Button variant="outlined" color="error" onClick={() => setIsOpen(false)}>
+            Cancel
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <AlertComponent />
     </>
   );
 };

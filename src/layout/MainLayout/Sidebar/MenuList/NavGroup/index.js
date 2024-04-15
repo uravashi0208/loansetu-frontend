@@ -17,7 +17,7 @@ const NavGroup = ({ item }) => {
   const items = item.children?.map((menu) => {
     const tokenValue = localStorage.getItem('token');
     const roleData = JSON.parse(tokenValue);
-    if (roleData.data.role === 'staff' && menu.id === 'staff') {
+    if (roleData?.data.role === 'staff' && menu.id === 'staff') {
       return null;
     }
     switch (menu.type) {

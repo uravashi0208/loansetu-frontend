@@ -1,8 +1,9 @@
-import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, Divider, Typography } from '@mui/material';
+import { Accordion, AccordionDetails, AccordionSummary, CircularProgress, Divider, Typography, Grid } from '@mui/material';
 import { Box } from '@mui/system';
 import GetRequestOnRole from 'commonRequest/getRequestRole';
 import moment from 'moment';
 import { useEffect, useState } from 'react';
+import { gridSpacing } from 'store/constant';
 
 const LeadFollowUp = ({ selectedLead }) => {
   const [leadFollowUpData, setLeadFollowUpData] = useState([]);
@@ -44,26 +45,63 @@ const LeadFollowUp = ({ selectedLead }) => {
                   }
                 }}
               >
-                {leadFollowUp.userDetails.user_name} {moment(leadFollowUp.createdAt).format('MM-DD-YYYY hh:mm A')}
+                {leadFollowUp.userDetails.user_name} - {leadFollowUp.followup_place}{' '}
+                {moment(leadFollowUp.createdAt).format('MM-DD-YYYY hh:mm A')}
               </AccordionSummary>
               <AccordionDetails>
-                <Box>
-                  <Typography variant="h4" lineHeight={2.5} color={'#756d6d'}>
-                    Next Followup Date
-                  </Typography>
-                  <Typography variant="h5" color="grey" pb={1}>
-                    {moment(leadFollowUp.next_followup_date).format('MM-DD-YYYY HH:mm A')}
-                  </Typography>
-                </Box>
+                <Grid item xs={12}>
+                  <Grid container spacing={gridSpacing}>
+                    {leadFollowUp.current_followup_date && (
+                      <Grid item xs={12} md={6}>
+                        <Box>
+                          <Typography variant="h4" lineHeight={2.5} color={'#756d6d'}>
+                            Current Followup Date
+                          </Typography>
+                          <Typography variant="h5" color="grey" pb={1}>
+                            {moment(leadFollowUp.current_followup_date).format('MM-DD-YYYY HH:mm A')}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    )}
+                    <Grid item xs={12} md={6}>
+                      <Box>
+                        <Typography variant="h4" lineHeight={2.5} color={'#756d6d'}>
+                          Next Followup Date
+                        </Typography>
+                        <Typography variant="h5" color="grey" pb={1}>
+                          {moment(leadFollowUp.next_followup_date).format('MM-DD-YYYY HH:mm A')}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Grid>
                 <Divider />
-                <Box>
-                  <Typography variant="h4" lineHeight={2.5} color={'#756d6d'}>
-                    Comment
-                  </Typography>
-                  <Typography variant="h5" color="grey" pb={1}>
-                    {leadFollowUp.comment}
-                  </Typography>
-                </Box>
+                <Grid item xs={12}>
+                  <Grid container spacing={gridSpacing}>
+                    {leadFollowUp.current_followup_comment && (
+                      <Grid item xs={12} md={6}>
+                        <Box>
+                          <Typography variant="h4" lineHeight={2.5} color={'#756d6d'}>
+                            Current Followup Comment
+                          </Typography>
+                          <Typography variant="h5" color="grey" pb={1}>
+                            {leadFollowUp.current_followup_comment}
+                          </Typography>
+                        </Box>
+                      </Grid>
+                    )}
+                    <Grid item xs={12} md={6}>
+                      <Box>
+                        <Typography variant="h4" lineHeight={2.5} color={'#756d6d'}>
+                          Next Followup Comment
+                        </Typography>
+                        <Typography variant="h5" color="grey" pb={1}>
+                          {leadFollowUp.next_followup_comment}
+                        </Typography>
+                      </Box>
+                    </Grid>
+                  </Grid>
+                </Grid>
               </AccordionDetails>
             </Accordion>
           ))

@@ -6,7 +6,15 @@ const CommonTable = ({ rows, columns, isloading }) => {
   return (
     <>
       {isloading ? (
-        <CircularProgress size={24} color="inherit" />
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'center', // Center horizontally
+            alignItems: 'center' // Center vertically
+          }}
+        >
+          <CircularProgress size={24} color="inherit" />
+        </div>
       ) : rows.length > 0 ? (
         <DataGrid
           rows={rows}

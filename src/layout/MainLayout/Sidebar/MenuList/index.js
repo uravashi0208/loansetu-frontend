@@ -11,11 +11,11 @@ const MenuList = () => {
   const tokenValue = localStorage.getItem('token');
   const roleData = JSON.parse(tokenValue);
 
-  const filteredMenuItems = menuItem.items.filter((item) => {
+  const filteredMenuItems = menuItem?.items.filter((item) => {
     // Check if user role is 'staff male' and item is 'settings', then exclude it
-    return !(roleData.data.role === 'staff' && item.id === 'settings');
+    return !(roleData?.data.role === 'staff' && item.id === 'settings');
   });
-  const navItems = filteredMenuItems.map((item) => {
+  const navItems = filteredMenuItems?.map((item) => {
     switch (item.type) {
       case 'group':
         return <NavGroup key={item.id} item={item} />;

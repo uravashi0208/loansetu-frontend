@@ -26,6 +26,7 @@ import { useAlert } from 'ui-component/alert/alert';
 import GetRequest from 'commonRequest/getRequest';
 import UpdateFormRequest from 'commonRequest/updatefoemRequest';
 import { gridSpacing } from 'store/constant';
+import GetRequestOnRole from 'commonRequest/getRequestRole';
 
 const LeadUpdate = ({ open, handleClose, selectedLead }) => {
   const [loading, setLoading] = useState(false);
@@ -92,6 +93,7 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
     remark: selectedLead.remark ? selectedLead.remark : '',
     createdBy: userData.data._id,
     reference: selectedLead.reference ? selectedLead.reference : '',
+    editlead: 'editlead',
     submit: null
   };
 
@@ -152,21 +154,17 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
             onSubmit={async (values) => {
               try {
                 setLoading(true);
-                let response;
-                studentData._id
-                  ? (response = await UpdateFormRequest('/student/editstudent/', values, studentData._id))
-                  : (response = await PostRequest('/student/addstudent', values));
+                let response = await UpdateFormRequest('/student/editstudent/', values, selectedLead._id);
                 if (response && response.response === true) {
                   showAlert(response.message, 'success');
-                  setTimeout(() => {
-                    setLoading(false);
-                    navigate('/lead');
-                  }, 1000);
+                  setLoading(false);
+                  handleClose();
                 } else {
                   setLoading(false);
                   showAlert(response.message, 'error');
                 }
               } catch (err) {
+                console.log('err :', err);
                 setLoading(false);
               }
             }}
@@ -196,7 +194,7 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
                               </MenuItem>
                               {staff.map((option) => (
                                 <MenuItem key={option._id} value={option._id}>
-                                  {option.first_name}
+                                  {option.user_name}
                                 </MenuItem>
                               ))}
                             </Select>

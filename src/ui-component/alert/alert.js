@@ -21,7 +21,7 @@ export const useAlert = () => {
   };
 
   const AlertComponent = () => (
-    <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
+    <Snackbar open={openAlert} autoHideDuration={2000} onClose={handleCloseAlert} anchorOrigin={{ vertical: 'top', horizontal: 'right' }}>
       <MuiAlert elevation={6} variant="filled" onClose={handleCloseAlert} severity={alertSeverity}>
         {alertMessage}
       </MuiAlert>

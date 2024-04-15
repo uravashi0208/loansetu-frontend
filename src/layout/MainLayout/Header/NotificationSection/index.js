@@ -33,6 +33,9 @@ import NotificationList from './NotificationList';
 import { IconBell, IconBellRinging } from '@tabler/icons-react';
 import GetRequestOnRole from 'commonRequest/getRequestRole';
 import { Link as RouterLink } from 'react-router-dom';
+import UpdateFormRequest from 'commonRequest/updatefoemRequest';
+import { useAlert } from 'ui-component/alert/alert';
+import addNotification from 'react-push-notification';
 
 // notification status options
 const status = [
@@ -63,7 +66,9 @@ const NotificationSection = () => {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   const [notificationData, setNotificationData] = useState([]);
+  const [pushnotificationData, setPushNotificationData] = useState([]);
   const [hasNewNotification, setHasNewNotification] = useState(false);
+  const { showAlert, AlertComponent } = useAlert();
   const tokenValue = localStorage.getItem('token');
   const userData = JSON.parse(tokenValue);
   /**
@@ -100,10 +105,66 @@ const NotificationSection = () => {
     const response = await GetRequestOnRole('/notification/getnotification/', userid);
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
-      setNotificationData(modifiedData);
+      const notificationRecords = modifiedData.filter((record) => record.isRead === false);
+      setNotificationData(notificationRecords);
 
       const hasNew = response.data.some((notification) => !notification.isRead);
       setHasNewNotification(hasNew);
+    }
+  };
+
+  useEffect(() => {
+    const currentTime = new Date();
+    const nextFollowupDate = new Date(pushnotificationData[0]?.next_followup_date);
+
+    const timeout = nextFollowupDate.getTime() - currentTime.getTime();
+    if (timeout > 0) {
+      const timerId = setTimeout(() => {
+        pushnotifications();
+      }, timeout);
+
+      return () => clearTimeout(timerId);
+    }
+  }, [notificationData]);
+
+  const pushnotifications = async () => {
+    const notificationresponse = await GetRequestOnRole('/leadfollowup/getleadfollowupNotifiction/', userData.data._id);
+
+    if (notificationresponse.data) {
+      setPushNotificationData(notificationresponse.data)
+      notificationresponse.data.forEach((notifications) => {
+        const nextFollowupDate = new Date(notifications.next_followup_date);
+        const currentTime = new Date();
+        const isSameTime =
+          currentTime.getFullYear() === nextFollowupDate.getFullYear() &&
+          currentTime.getMonth() === nextFollowupDate.getMonth() &&
+          currentTime.getDate() === nextFollowupDate.getDate() &&
+          currentTime.getHours() === nextFollowupDate.getHours() &&
+          currentTime.getMinutes() === nextFollowupDate.getMinutes();
+        if (isSameTime) {
+          // Trigger push notification here
+          addNotification({
+            title: 'Reminder',
+            subtitle: `Next Follow-up for ${notifications.studentDetails.student_name}`,
+            message: 'You have a follow-up scheduled now.',
+            theme: 'darkblue',
+            native: true // when using native, your OS will handle theming.
+          });
+        }
+      });
+    }
+  };
+
+  const handleisread = async () => {
+    const data = {
+      isread: true
+    };
+    let response = await UpdateFormRequest('/notification/editnotification/', data, userData.data._id);
+    if (response.response === true) {
+      showAlert(response.message, 'success');
+      getAllNotification();
+    } else {
+      showAlert(response.message, 'error');
     }
   };
 
@@ -188,7 +249,7 @@ const NotificationSection = () => {
                           </Stack>
                         </Grid>
                         <Grid item>
-                          <Typography component={Link} to="#" variant="subtitle2" color="primary">
+                          <Typography onClick={handleisread} component={Link} to="#" variant="subtitle2" color="primary">
                             Mark as all read
                           </Typography>
                         </Grid>
@@ -237,6 +298,7 @@ const NotificationSection = () => {
           </Transitions>
         )}
       </Popper>
+      <AlertComponent />
     </>
   );
 };

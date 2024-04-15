@@ -2,13 +2,9 @@
 import { Button } from '@mui/material';
 import CommonTable from 'ui-component/table/CommonTable';
 import { useEffect, useState } from 'react';
-import EditOutlinedIcon from '@mui/icons-material/EditOutlined';
-import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
-import DeleteRequest from 'commonRequest/deleteRequest';
-import Swal from 'sweetalert2';
-import { useAlert } from 'ui-component/alert/alert';
-import { useNavigate } from 'react-router';
 import GetRequestOnRole from 'commonRequest/getRequestRole';
+import { IconEye } from '@tabler/icons-react';
+import LeadDialog from '../dialog/leaddialog';
 
 // project imports
 
@@ -16,9 +12,9 @@ import GetRequestOnRole from 'commonRequest/getRequestRole';
 
 const CancelLead = ({ userData }) => {
   const [leadData, setLeadData] = useState([]);
-  const { showAlert, AlertComponent } = useAlert();
   const [loading, setLoading] = useState(false);
-  const navigate = useNavigate();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [selectedLead, setSelectedLead] = useState([]);
   const columns = [
     { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
     {
@@ -56,27 +52,8 @@ const CancelLead = ({ userData }) => {
       renderCell: (params) => (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
-            <Button
-              onClick={() => handleEdit(params.row._id)}
-              size="small"
-              style={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                border: '1px solid rgb(220 220 220)',
-                borderRadius: '5px',
-                marginRight: '6px'
-              }}
-            >
-              <EditOutlinedIcon />
-            </Button>
-            <Button
-              onClick={() => handleDelete(params.row._id)}
-              size="small"
-              style={{ width: '40px', minWidth: '40px', height: '40px', border: '1px solid rgb(220 220 220)', borderRadius: '5px' }}
-              color="error"
-            >
-              <DeleteOutlinedIcon />
+            <Button onClick={() => handleOpenDialog(params.row)}>
+              <IconEye />
             </Button>
           </div>
         </>
@@ -101,38 +78,19 @@ const CancelLead = ({ userData }) => {
     }
   };
 
-  const handleEdit = async (id) => {
-    navigate('/lead/addeditlead', { state: id });
+  const handleOpenDialog = (lead) => {
+    setSelectedLead(lead);
+    setOpenDialog(true);
   };
-  const handleDelete = (id) => {
-    Swal.fire({
-      // Use Swal.fire() instead of Swal()
-      title: 'Are you sure?',
-      text: 'Once deleted, you will not be able to recover this details!',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonColor: '#3085d6',
-      cancelButtonColor: '#d33',
-      confirmButtonText: 'Yes, delete it!'
-    }).then(async (result) => {
-      if (result.isConfirmed) {
-        const response = await DeleteRequest('/student/deletestudent/', id);
-        if (response.response == true) {
-          showAlert(response.message, 'success');
-          setTimeout(() => {
-            getAllLead();
-          }, 1000);
-        } else {
-          showAlert(response.message, 'error');
-        }
-      }
-    });
+
+  const handleCloseDialog = () => {
+    setOpenDialog(false);
   };
 
   return (
     <>
       <CommonTable rows={leadData} columns={columns} isloading={loading} />
-      <AlertComponent />
+      <LeadDialog open={openDialog} handleClose={handleCloseDialog} selectedLead={selectedLead} />
     </>
   );
 };

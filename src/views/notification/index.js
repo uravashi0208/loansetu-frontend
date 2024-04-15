@@ -37,6 +37,8 @@ const Notification = () => {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
       setNotificationData(modifiedData);
       setLoading(false);
+    } else {
+      setLoading(false);
     }
   };
 

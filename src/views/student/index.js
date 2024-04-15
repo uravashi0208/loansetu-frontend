@@ -104,6 +104,8 @@ const Studentss = () => {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
       setStudentData(modifiedData);
       setLoading(false);
+    } else {
+      setLoading(false);
     }
   };
 

@@ -93,11 +93,11 @@ const NotificationList = ({ notificationlist }) => {
     <List
       sx={{
         width: '100%',
-        maxWidth: 330,
+        maxWidth: 370,
         py: 0,
         borderRadius: '10px',
         [theme.breakpoints.down('md')]: {
-          maxWidth: 300
+          maxWidth: 370
         },
         '& .MuiListItemSecondaryAction-root': {
           top: 22
