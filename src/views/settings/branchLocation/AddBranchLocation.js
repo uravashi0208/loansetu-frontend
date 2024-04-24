@@ -37,8 +37,10 @@ const AddEditBranchLocation = () => {
 
   const initialValues = {
     location_name: branchLocation.location_name ? branchLocation.location_name : '',
-    status: branchLocation.status ? status : false,
-    submit: null
+    branch_address: branchLocation.branch_address ? branchLocation.branch_address : '',
+    branch_pincode: branchLocation.branch_pincode ? branchLocation.branch_pincode : '',
+    branch_email: branchLocation.branch_email ? branchLocation.branch_email : '',
+    status: branchLocation.status ? status : false
   };
 
   const handleCancelClick = () => {
@@ -60,11 +62,17 @@ const AddEditBranchLocation = () => {
               branchLocation._id
                 ? (response = await UpdateRequest('/branchlocation/editbranchlocation/', {
                     location_name: values.location_name,
+                    branch_address: values.branch_address,
+                    branch_pincode: values.branch_pincode,
+                    branch_email: values.branch_email,
                     status: status,
                     id: branchLocation._id
                   }))
                 : (response = await PostRequest('/branchlocation/addbranchlocation', {
                     location_name: values.location_name,
+                    branch_address: values.branch_address,
+                    branch_pincode: values.branch_pincode,
+                    branch_email: values.branch_email,
                     status: status
                   }));
               if (response.response === true) {
@@ -86,8 +94,8 @@ const AddEditBranchLocation = () => {
             <form noValidate autoComplete="off" onSubmit={handleSubmit}>
               <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
-                  <Grid item xs={12} md={6}>
-                    <FormControl sx={{ marginBottom: '18px' }} fullWidth error={Boolean(touched.location_name && errors.location_name)}>
+                  <Grid item xs={12} md={4}>
+                    <FormControl fullWidth error={Boolean(touched.location_name && errors.location_name)}>
                       <TextField
                         id="outlined-adornment-location_name"
                         type="text"
@@ -106,6 +114,51 @@ const AddEditBranchLocation = () => {
                       )}
                     </FormControl>
                   </Grid>
+                  <Grid item xs={12} md={3}>
+                    <FormControl fullWidth>
+                      <TextField
+                        id="outlined-adornment-branch_pincode"
+                        type="text"
+                        value={values.branch_pincode}
+                        name="branch_pincode"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Pincode"
+                        variant="outlined" // Add this line
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={5}>
+                    <FormControl fullWidth>
+                      <TextField
+                        id="outlined-adornment-branch_email"
+                        type="text"
+                        value={values.branch_email}
+                        name="branch_email"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Branch Email"
+                        variant="outlined" // Add this line
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={6}>
+                    <FormControl fullWidth>
+                      <TextField
+                        id="outlined-adornment-branch_address"
+                        type="text"
+                        value={values.branch_address}
+                        name="branch_address"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Branch Address"
+                        rows={3}
+                        variant="outlined" // Add this line
+                        multiline
+                      />
+                    </FormControl>
+                  </Grid>
+
                   <Grid item xs={12} md={6}>
                     <FormControl fullWidth sx={{ marginBottom: '18px' }}>
                       <FormControlLabel

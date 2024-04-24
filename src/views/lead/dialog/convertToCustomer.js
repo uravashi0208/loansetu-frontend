@@ -13,14 +13,16 @@ import {
   MenuItem,
   Select,
   TextField,
-  InputAdornment,
+  // InputAdornment,
   Typography,
-  Input
+  Input,
+  Checkbox,
+  FormControlLabel
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from 'yup';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
+// import Visibility from '@mui/icons-material/Visibility';
+// import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 // Importing icons from @tabler/icons-react
 import { Box } from '@mui/system';
@@ -30,14 +32,16 @@ import GetRequest from 'commonRequest/getRequest';
 import UpdateFormRequest from 'commonRequest/updatefoemRequest';
 import { gridSpacing } from 'store/constant';
 import { IconUpload } from '@tabler/icons-react';
+import { useNavigate } from 'react-router-dom';
 
 const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
   const [selectedUploadDocument, setSelectedUploadDocument] = useState(null);
   const [loanTypeData, setLoanTypeData] = useState([]);
   const [staff, setStaff] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
+  const [checked, setChecked] = useState(false);
   const tokenValue = localStorage.getItem('token');
   const userData = JSON.parse(tokenValue);
 
@@ -61,14 +65,6 @@ const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
     }
   };
 
-  const handleClickShowPassword = () => {
-    setShowPassword(!showPassword);
-  };
-
-  const handleMouseDownPassword = (event) => {
-    event.preventDefault();
-  };
-
   const initialValues = {
     email: selectedLead.email ? selectedLead.email : '',
     city: selectedLead.city ? selectedLead.city : '',
@@ -78,9 +74,11 @@ const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
     remark: selectedLead.remark ? selectedLead.remark : '',
     service_staff: selectedLead.service_staff ? selectedLead.service_staff : '',
     loan_amount: selectedLead.loan_amount ? selectedLead.loan_amount : '',
-    password: selectedLead.password ? selectedLead.password : '',
     createdBy: userData.data._id,
     convert_to_customer: 'converttocustomer',
+    shisava: checked,
+    shri_shava_remark: '',
+    shri_sava_amount: '',
     upload_document: ''
   };
 
@@ -135,11 +133,11 @@ const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
             initialValues={initialValues}
             validationSchema={Yup.object().shape({
               email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
-              password: Yup.string().max(255).required('Password is required'),
               loantype: Yup.string().required('Loan type is required'),
               service_staff: Yup.string().required('Service Staff is required')
             })}
             onSubmit={async (values) => {
+              console.log('values :', values);
               try {
                 setLoading(true);
                 const formData = new FormData();
@@ -157,6 +155,7 @@ const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
                   showAlert(response.message, 'success');
                   setLoading(false);
                   handleClose();
+                  navigate('/customer');
                 } else {
                   setLoading(false);
                   showAlert(response.message, 'error');
@@ -317,39 +316,52 @@ const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
                         />
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth error={Boolean(touched.password && errors.password)}>
-                        <TextField
-                          id="outlined-adornment-password-login"
-                          type={showPassword ? 'text' : 'password'}
-                          value={values.password}
-                          name="password"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Password"
-                          error={Boolean(touched.password && errors.password)}
-                          variant="outlined" // Add this line
-                          endAdornment={
-                            <InputAdornment position="end">
-                              <IconButton
-                                aria-label="toggle password visibility"
-                                onClick={handleClickShowPassword}
-                                onMouseDown={handleMouseDownPassword}
-                                edge="end"
-                                size="large"
-                              >
-                                {showPassword ? <Visibility /> : <VisibilityOff />}
-                              </IconButton>
-                            </InputAdornment>
-                          }
-                        />
-                        {touched.password && errors.password && (
-                          <FormHelperText error id="standard-weight-helper-text-password-login">
-                            {errors.password}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
+                    <Grid item xs={12} md={3}>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={checked}
+                            onChange={(event) => setChecked(event.target.checked)}
+                            name="shisava"
+                            color="primary"
+                          />
+                        }
+                        label="श्री1|"
+                      />
                     </Grid>
+                    {checked && (
+                      <>
+                        <Grid item xs={12} md={5}>
+                          <FormControl fullWidth>
+                            <TextField
+                              id="outlined-adornment-shri_shava_remark-login"
+                              multiline
+                              value={values.shri_shava_remark}
+                              name="shri_shava_remark"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              label="श्री1| Remark"
+                              rows={4}
+                              variant="outlined" // Add this line
+                            />
+                          </FormControl>
+                        </Grid>
+                        <Grid item xs={12} md={4}>
+                          <FormControl fullWidth>
+                            <TextField
+                              id="outlined-adornment-shri_sava_amount-login"
+                              type="number"
+                              value={values.shri_sava_amount}
+                              name="shri_sava_amount"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              label="श्री1| Amount"
+                              variant="outlined" // Add this line
+                            />
+                          </FormControl>
+                        </Grid>
+                      </>
+                    )}
                     <Grid item xs={12} md={6}>
                       <label htmlFor="upload-document">
                         <Button color="secondary" variant="outlined" component="span">

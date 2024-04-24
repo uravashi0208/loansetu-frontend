@@ -4,7 +4,9 @@ import CommonTable from 'ui-component/table/CommonTable';
 import { useEffect, useState } from 'react';
 import GetRequestOnRole from 'commonRequest/getRequestRole';
 import { IconEye } from '@tabler/icons-react';
+import { IconFileDescription } from '@tabler/icons-react';
 import LeadDialog from '../dialog/leaddialog';
+import StudentDetails from '../dialog/studentDetails';
 
 // project imports
 
@@ -14,6 +16,7 @@ const ProcessingLead = ({ userData }) => {
   const [leadData, setLeadData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openStudentDialog, setOpenStudentDialog] = useState(false);
   const [selectedLead, setSelectedLead] = useState([]);
   const columns = [
     { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
@@ -47,13 +50,38 @@ const ProcessingLead = ({ userData }) => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 100,
+      width: 120,
       sortable: false,
       renderCell: (params) => (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
-            <Button onClick={() => handleOpenDialog(params.row)}>
+            <Button
+              onClick={() => handleOpenDialog(params.row)}
+              size="small"
+              style={{
+                width: '40px',
+                minWidth: '40px',
+                height: '40px',
+                border: '1px solid rgb(220 220 220)',
+                borderRadius: '5px',
+                marginRight: '6px'
+              }}
+            >
               <IconEye />
+            </Button>
+            <Button
+              onClick={() => handleOpenStudentDialog(params.row)}
+              size="small"
+              style={{
+                width: '40px',
+                minWidth: '40px',
+                height: '40px',
+                border: '1px solid rgb(220 220 220)',
+                borderRadius: '5px',
+                marginRight: '6px'
+              }}
+            >
+              <IconFileDescription />
             </Button>
           </div>
         </>
@@ -87,10 +115,20 @@ const ProcessingLead = ({ userData }) => {
     setOpenDialog(false);
   };
 
+  const handleOpenStudentDialog = (lead) => {
+    setSelectedLead(lead);
+    setOpenStudentDialog(true);
+  };
+
+  const handleCloseStudentDialog = () => {
+    setOpenStudentDialog(false);
+  };
+
   return (
     <>
       <CommonTable rows={leadData} columns={columns} isloading={loading} />
       <LeadDialog open={openDialog} handleClose={handleCloseDialog} selectedLead={selectedLead} />
+      <StudentDetails open={openStudentDialog} handleClose={handleCloseStudentDialog} selectedLead={selectedLead} />
     </>
   );
 };

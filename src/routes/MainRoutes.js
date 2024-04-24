@@ -29,6 +29,9 @@ const Loantype = Loadable(lazy(() => import('views/settings/loanType/index')));
 const AddEditLoanType = Loadable(lazy(() => import('views/settings/loanType/addLoanType')));
 const Notification = Loadable(lazy(() => import('views/notification/index')));
 const Customer = Loadable(lazy(() => import('views/customer/index')));
+const EditStaffProfile = Loadable(lazy(() => import('views/staff/EditStaffProfile')));
+const EditCustomer = Loadable(lazy(() => import('views/customer/EditCustomer')));
+
 // ==============================|| MAIN ROUTING ||============================== //
 
 const MainRoutes = {
@@ -63,6 +66,15 @@ const MainRoutes = {
         {
           path: 'addstaff',
           element: <AddStaff />
+        }
+      ]
+    },
+    {
+      path: 'staff',
+      children: [
+        {
+          path: 'editstaff',
+          element: <EditStaffProfile />
         }
       ]
     },
@@ -211,6 +223,15 @@ const MainRoutes = {
         {
           path: '',
           element: <Customer />
+        }
+      ]
+    },
+    {
+      path: 'customer',
+      children: [
+        {
+          path: 'editcustomer',
+          element: <EditCustomer />
         }
       ]
     }

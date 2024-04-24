@@ -1,8 +1,8 @@
 // assets
-import { IconUsers, IconLadder, IconFilter, IconSchool, IconBellRinging } from '@tabler/icons-react';
+import { IconUsers, IconLadder, IconFilter, IconSchool, IconBellRinging, IconUsersGroup } from '@tabler/icons-react';
 
 // constant
-const icons = { IconUsers, IconLadder, IconFilter, IconSchool, IconBellRinging };
+const icons = { IconUsers, IconLadder, IconFilter, IconSchool, IconBellRinging, IconUsersGroup };
 
 // ==============================|| SAMPLE PAGE & DOCUMENTATION MENU ITEMS ||============================== //
 
@@ -39,7 +39,7 @@ const other = {
       title: 'Customer',
       type: 'item',
       url: '/customer',
-      icon: icons.IconSchool,
+      icon: icons.IconUsersGroup,
       breadcrumbs: false
     },
     {

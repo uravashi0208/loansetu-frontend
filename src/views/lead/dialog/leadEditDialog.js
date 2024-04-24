@@ -58,6 +58,7 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
     if (response.data) {
       setCountryData(response.data);
     }
+    getUniversitiesByCountry(selectedLead.country);
   };
 
   const getAllTypeOfLoan = async () => {

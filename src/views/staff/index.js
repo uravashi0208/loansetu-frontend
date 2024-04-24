@@ -187,7 +187,7 @@ const Staff = () => {
   );
 
   const handleEdit = async (id) => {
-    navigate('/staff/addstaff', { state: id });
+    navigate('/staff/editstaff', { state: id });
   };
   const handleDelete = (id) => {
     Swal.fire({

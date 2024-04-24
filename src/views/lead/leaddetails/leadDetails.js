@@ -13,7 +13,6 @@ const headerSX = {
   padding: '15px',
   backgroundColor: '#070d59'
 };
-``;
 const LeadDetails = ({ selectedLead }) => {
   // getleadbyid;
   // const [studentData, setStudentData] = useState([]);

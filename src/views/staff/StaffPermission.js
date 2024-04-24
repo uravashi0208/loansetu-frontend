@@ -20,7 +20,8 @@ const StaffPermission = () => {
   const [permissions, setPermissions] = useState({
     0: { add: false, update: false, delete: false, view: false },
     1: { add: false, update: false, delete: false, view: false },
-    2: { add: false, update: false, delete: false, view: false }
+    2: { add: false, update: false, delete: false, view: false },
+    3: { add: false, update: false, delete: false, view: false }
   });
 
   useEffect(() => {
@@ -73,7 +74,8 @@ const StaffPermission = () => {
   const roleNames = {
     0: 'Staff',
     1: 'Lead',
-    2: 'Customer'
+    2: 'Customer',
+    3: 'Partner'
   };
 
   return (

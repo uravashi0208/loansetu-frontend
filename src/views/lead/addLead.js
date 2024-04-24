@@ -10,8 +10,11 @@ import {
   InputLabel,
   Typography,
   Divider,
-  CircularProgress
+  CircularProgress,
+  Popover,
+  IconButton
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
@@ -33,7 +36,10 @@ const AddEditLead = () => {
   const [courseTypeData, setCourseTypeData] = useState([]);
   const [loanTypeData, setLoanTypeData] = useState([]);
   const [countryData, setCountryData] = useState([]);
+  const [existingReferenceOptions, setExistingReferenceOptions] = useState([]); // Define state for existing reference options
   const [staff, setStaff] = useState([]);
+  const [popoverAnchor, setPopoverAnchor] = useState(null);
+  const [newReference, setNewReference] = useState('');
   const { showAlert, AlertComponent } = useAlert();
   const location = useLocation();
   const tokenValue = localStorage.getItem('token');
@@ -47,11 +53,27 @@ const AddEditLead = () => {
     getAllCourse();
     getAllStaff();
     getAllCountry();
+    getExistingReferenceOptions();
   }, []);
 
+  const handlePopoverOpen = (event) => {
+    setPopoverAnchor(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setPopoverAnchor(null);
+  };
   const getStudentById = async (id) => {
     const response = await GetByIdRequest('/student/getstudentbyid/', id);
     setStudentData(response.data);
+  };
+
+  const getExistingReferenceOptions = async () => {
+    // Fetch existing reference options from backend
+    const response = await GetRequest('/reference/getreference');
+    if (response.data) {
+      setExistingReferenceOptions(response.data);
+    }
   };
 
   const getUniversitiesByCountry = async (country) => {
@@ -105,6 +127,21 @@ const AddEditLead = () => {
     reference: studentData.reference ? studentData.reference : '',
     submit: null
   };
+
+  const handleAddReference = async () => {
+    if (newReference.trim() !== '') {
+      // Add new reference to the database
+      const response = await PostRequest('/reference/addreference', { reference_name: newReference });
+      if (response && response.response === true) {
+        // Update existing reference options state
+        setExistingReferenceOptions([...existingReferenceOptions, newReference]);
+        setNewReference('');
+        handlePopoverClose();
+      } else {
+        showAlert(response.message, 'error');
+      }
+    }
+  };
   return (
     <>
       <MainCard title={`${studentData.length === 0 ? 'Add' : 'Edit'} Lead`}>
@@ -114,7 +151,8 @@ const AddEditLead = () => {
           validationSchema={Yup.object().shape({
             student_name: Yup.string().required('Name is required'),
             phone: Yup.string().max(10).min(10).required('Phone number is required'),
-            loantype: Yup.string().required('Loan type is required')
+            loantype: Yup.string().required('Loan type is required'),
+            reference: Yup.string().required('Reference is required')
           })}
           onSubmit={async (values) => {
             try {
@@ -351,18 +389,69 @@ const AddEditLead = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <FormControl fullWidth>
-                        <TextField
-                          id="outlined-adornment-email-login"
-                          type="text"
+                      <FormControl fullWidth error={Boolean(touched.reference && errors.reference)}>
+                        <InputLabel outlined>Reference</InputLabel>
+                        <Select
+                          id="outlined-adornment-reference-login"
                           value={values.reference}
-                          name="reference"
+                          label="Reference"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          label="Reference"
-                          variant="outlined" // Add this line
-                        />
+                          name="reference"
+                          endAdornment={
+                            <IconButton size="large" onClick={handlePopoverOpen}>
+                              <AddIcon />
+                            </IconButton>
+                          }
+                        >
+                          <MenuItem value="" disabled>
+                            <em>Select or Add Reference</em>
+                          </MenuItem>
+                          {existingReferenceOptions.map((option) => (
+                            <MenuItem key={option._id} value={option._id}>
+                              {option.reference_name}
+                            </MenuItem>
+                          ))}
+                        </Select>
+                        {touched.reference && errors.reference && (
+                          <FormHelperText error id="standard-weight-helper-text-reference">
+                            {errors.reference}
+                          </FormHelperText>
+                        )}
                       </FormControl>
+                      <Popover
+                        open={Boolean(popoverAnchor)}
+                        anchorEl={popoverAnchor}
+                        onClose={handlePopoverClose}
+                        anchorOrigin={{
+                          vertical: 'bottom',
+                          horizontal: 'center'
+                        }}
+                        transformOrigin={{
+                          vertical: 'top',
+                          horizontal: 'center'
+                        }}
+                      >
+                        <Box p={2}>
+                          <Typography variant="h6" gutterBottom>
+                            Add New Reference
+                          </Typography>
+                          <TextField
+                            id="outlined-adornment-new-reference"
+                            type="text"
+                            value={newReference}
+                            onChange={(e) => setNewReference(e.target.value)}
+                            label="New Reference"
+                            variant="outlined"
+                            fullWidth
+                          />
+                          <Box mt={2}>
+                            <Button variant="contained" onClick={handleAddReference}>
+                              Add
+                            </Button>
+                          </Box>
+                        </Box>
+                      </Popover>
                     </Grid>
                   </Grid>
                 </Grid>

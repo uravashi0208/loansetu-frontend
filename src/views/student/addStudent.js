@@ -55,6 +55,7 @@ const AddEditStudent = () => {
 
   const getStudentById = async (id) => {
     const response = await GetByIdRequest('/student/getstudentbyid/', id);
+    if (response.data.country) getUniversitiesByCountry(response.data.country);
     setStudentData(response.data);
   };
 
@@ -89,7 +90,12 @@ const AddEditStudent = () => {
   const [examinationDetails, setExaminationDetails] = useState([{ examination: '', passingYear: '', percentage: '', backlog: '' }]);
 
   const handleAddDetail = () => {
-    setExaminationDetails([...examinationDetails, { examination: '', passingYear: '', percentage: '', backlog: '' }]);
+    setExaminationDetails([...examinationDetails, { examination: '', passingYear: '', percentage: '', school_name: '' }]);
+  };
+  const handleChangeDetail = (i, e) => {
+    let newFormValues = [...examinationDetails];
+    newFormValues[i][e.target.name] = e.target.value;
+    setExaminationDetails(newFormValues);
   };
 
   const handleRemoveDetail = (index) => {
@@ -428,49 +434,57 @@ const AddEditStudent = () => {
                   Examination Details
                 </Typography>
 
-                {examinationDetails.map((detail, index) => (
+                {examinationDetails?.map((element, index) => (
                   <Grid container spacing={2} key={index} mb={2}>
                     <Grid item xs={12} md={3}>
                       <FormControl fullWidth>
                         <TextField
-                          value={detail.examination}
-                          name={`examination_${index}`}
-                          onChange={handleChange}
-                          label="Examination"
+                          id={`examination_${index}`}
+                          value={element.examination}
+                          name={`examination`}
+                          onChange={(e) => handleChangeDetail(index, e)}
+                          label="Education"
                           variant="outlined"
+                          type="text"
                         />
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={3}>
                       <FormControl fullWidth>
                         <TextField
-                          value={detail.passingYear}
-                          name={`passingYear_${index}`}
-                          onChange={handleChange}
+                          id={`passingYear_${index}`}
+                          value={element.passingYear}
+                          name={`passingYear`}
+                          onChange={(e) => handleChangeDetail(index, e)}
                           label="Passing Year"
                           variant="outlined"
+                          type="text"
                         />
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={3}>
                       <FormControl fullWidth>
                         <TextField
-                          value={detail.percentage}
-                          name={`percentage_${index}`}
-                          onChange={handleChange}
+                          id={`percentage_${index}`}
+                          value={element.percentage}
+                          name={`percentage`}
+                          onChange={(e) => handleChangeDetail(index, e)}
                           label="Percentage"
                           variant="outlined"
+                          type="text"
                         />
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={2}>
                       <FormControl fullWidth>
                         <TextField
-                          value={detail.backlog}
-                          name={`backlog_${index}`}
-                          onChange={handleChange}
-                          label="Backlog"
+                          id={`school_name${index}`}
+                          value={element.school_name}
+                          name={`school_name`}
+                          onChange={(e) => handleChangeDetail(index, e)}
+                          label="School/University Name"
                           variant="outlined"
+                          type="text"
                         />
                       </FormControl>
                     </Grid>
