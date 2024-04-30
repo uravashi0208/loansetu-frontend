@@ -23,6 +23,7 @@ import { Box } from '@mui/system';
 import { Formik } from 'formik';
 import PostRequest from 'commonRequest/postRequest';
 import { useAlert } from 'ui-component/alert/alert';
+import { gridSpacing } from 'store/constant';
 
 const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
   const [loading, setLoading] = useState(false);
@@ -121,98 +122,123 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
             {({ errors, handleBlur, handleChange, handleSubmit, touched, values }) => (
               <form noValidate autoComplete="off" onSubmit={handleSubmit}>
                 <Grid item xs={12}>
-                  <Grid container>
-                    <Grid item xs={12} md={12}>
-                      <FormControl sx={{ marginBottom: '12px' }} fullWidth>
-                        <TextField
-                          id="outlined-adornment-current_followup_date"
-                          type="datetime-local"
-                          value={values.current_followup_date}
-                          name="current_followup_date"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          variant="outlined" // Add this line
-                          // label={<InputLabel shrink>Next Follow Up Date (dd-mm-yyyy)</InputLabel>}
-                          InputLabelProps={{ shrink: true }}
-                        />
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <FormControl sx={{ marginBottom: '12px' }} fullWidth>
-                        <TextField
-                          id="outlined-adornment-current_followup_comment-login"
-                          multiline
-                          value={values.current_followup_comment}
-                          name="current_followup_comment"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Current Follow Up Comment"
-                          rows={4}
-                          variant="outlined" // Add this line
-                          maxDate={new Date()}
-                        />
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <FormControl
-                        sx={{ marginBottom: '12px' }}
-                        fullWidth
-                        error={Boolean(touched.next_followup_date && errors.next_followup_date)}
-                      >
-                        <TextField
-                          id="outlined-adornment-next_followup_date"
-                          type="datetime-local"
-                          value={values.next_followup_date}
-                          name="next_followup_date"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          error={Boolean(touched.next_followup_date && errors.next_followup_date)}
-                          variant="outlined" // Add this line
-                          // label="Next Follow Up Date"
-                        />
-                        {touched.next_followup_date && errors.next_followup_date && (
-                          <FormHelperText error id="standard-weight-helper-text-next_followup_date">
-                            {errors.next_followup_date}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
-                      <FormControl
-                        fullWidth
-                        sx={{ marginBottom: '12px' }}
-                        error={Boolean(touched.next_followup_comment && errors.next_followup_comment)}
-                      >
-                        <TextField
-                          id="outlined-adornment-next_followup_comment-login"
-                          multiline
-                          value={values.next_followup_comment}
-                          name="next_followup_comment"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Next Follow Up Comment"
-                          rows={4}
-                          variant="outlined" // Add this line
-                          maxDate={new Date()}
-                        />
-                        {touched.next_followup_comment && errors.next_followup_comment && (
-                          <FormHelperText error id="standard-weight-helper-text-next_followup_comment">
-                            {errors.next_followup_comment}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                    </Grid>
-                    <Grid item xs={12} md={12}>
+                  <Grid container spacing={gridSpacing}>
+                    <Grid item xs={12} md={12} lg={12}>
                       <FormControl component="fieldset" error={Boolean(touched.followup_place && errors.followup_place)}>
                         <FormLabel component="legend">Follow-up Place</FormLabel>
                         <RadioGroup aria-label="followup_place" name="followup_place" value={values.followup_place} onChange={handleChange}>
-                          <FormControlLabel value="call" control={<Radio />} label="Call" />
-                          <FormControlLabel value="at_office" control={<Radio />} label="At Office" />
-                          <FormControlLabel value="at_home" control={<Radio />} label="At Home" />
-                          <FormControlLabel value="whatsapp" control={<Radio />} label="WhatsApp" />
+                          <Grid container>
+                            <Grid item xs={12} md={12} lg={6}>
+                              <FormControlLabel value="call" control={<Radio />} label="Call" />
+                            </Grid>
+                            <Grid item xs={12} md={12} lg={6}>
+                              <FormControlLabel value="at_office" control={<Radio />} label="At Office" />
+                            </Grid>
+                          </Grid>
+                          <Grid container>
+                            <Grid item xs={12} md={12} lg={6}>
+                              <FormControlLabel value="at_home" control={<Radio />} label="At Home" />
+                            </Grid>
+                            <Grid item xs={12} md={12} lg={6}>
+                              <FormControlLabel value="whatsapp" control={<Radio />} label="WhatsApp" />
+                            </Grid>
+                          </Grid>
                         </RadioGroup>
                         {touched.followup_place && errors.followup_place && <FormHelperText error>{errors.followup_place}</FormHelperText>}
                       </FormControl>
+                    </Grid>
+                    <Grid item xs={12}>
+                      <Grid container spacing={gridSpacing}>
+                        <Grid item xs={12} md={6}>
+                          <Typography variant="h5" sx={{ marginBottom: '9px' }}>
+                            Current Followup Details :-
+                          </Typography>
+                          <Grid item xs={12}>
+                            <Grid container spacing={gridSpacing}>
+                              <Grid item xs={12} md={12}>
+                                <FormControl fullWidth>
+                                  <TextField
+                                    id="outlined-adornment-current_followup_date"
+                                    type="datetime-local"
+                                    value={values.current_followup_date}
+                                    name="current_followup_date"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    variant="outlined" // Add this line
+                                    InputLabelProps={{ shrink: true }}
+                                  />
+                                </FormControl>
+                              </Grid>
+                              <Grid item xs={12} md={12}>
+                                <FormControl fullWidth>
+                                  <TextField
+                                    id="outlined-adornment-current_followup_comment-login"
+                                    multiline
+                                    value={values.current_followup_comment}
+                                    name="current_followup_comment"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    label="Current Follow Up Comment"
+                                    rows={4}
+                                    variant="outlined" // Add this line
+                                    maxDate={new Date()}
+                                  />
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                        <Grid item xs={12} md={6}>
+                          <Typography variant="h5" sx={{ marginBottom: '9px' }}>
+                            Next Followup Details :-
+                          </Typography>
+                          <Grid item xs={12}>
+                            <Grid container spacing={gridSpacing}>
+                              <Grid item xs={12} md={12}>
+                                <FormControl fullWidth error={Boolean(touched.next_followup_date && errors.next_followup_date)}>
+                                  <TextField
+                                    id="outlined-adornment-next_followup_date"
+                                    type="datetime-local"
+                                    value={values.next_followup_date}
+                                    name="next_followup_date"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    error={Boolean(touched.next_followup_date && errors.next_followup_date)}
+                                    variant="outlined" // Add this line
+                                    minDate={new Date()}
+                                  />
+                                  {touched.next_followup_date && errors.next_followup_date && (
+                                    <FormHelperText error id="standard-weight-helper-text-next_followup_date">
+                                      {errors.next_followup_date}
+                                    </FormHelperText>
+                                  )}
+                                </FormControl>
+                              </Grid>
+                              <Grid item xs={12} md={12}>
+                                <FormControl fullWidth error={Boolean(touched.next_followup_comment && errors.next_followup_comment)}>
+                                  <TextField
+                                    id="outlined-adornment-next_followup_comment-login"
+                                    multiline
+                                    value={values.next_followup_comment}
+                                    name="next_followup_comment"
+                                    onBlur={handleBlur}
+                                    onChange={handleChange}
+                                    label="Next Follow Up Comment"
+                                    rows={4}
+                                    variant="outlined" // Add this line
+                                    error={Boolean(touched.next_followup_comment && errors.next_followup_comment)}
+                                  />
+                                  {touched.next_followup_comment && errors.next_followup_comment && (
+                                    <FormHelperText error id="standard-weight-helper-text-next_followup_comment">
+                                      {errors.next_followup_comment}
+                                    </FormHelperText>
+                                  )}
+                                </FormControl>
+                              </Grid>
+                            </Grid>
+                          </Grid>
+                        </Grid>
+                      </Grid>
                     </Grid>
                   </Grid>
                 </Grid>
@@ -223,7 +249,7 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
                   </Box>
                 )}
 
-                <Box sx={{ mt: 2 }}>
+                <Box sx={{ mt: 1, textAlign: 'center' }}>
                   <Button
                     disableElevation
                     disabled={loading}
@@ -234,7 +260,6 @@ const AddLeadFollowUp = ({ open, handleClose, selectedLead }) => {
                     sx={{ mr: 2 }}
                   >
                     Save
-                    {/* {loading ? <CircularProgress size={24} color="inherit" /> : 'Save'} */}
                   </Button>
                   <Button disableElevation size="large" type="reset" variant="outlined" color="secondary" onClick={handleClose}>
                     Cancel

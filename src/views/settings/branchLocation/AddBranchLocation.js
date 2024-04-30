@@ -94,7 +94,7 @@ const AddEditBranchLocation = () => {
             <form noValidate autoComplete="off" onSubmit={handleSubmit}>
               <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth error={Boolean(touched.location_name && errors.location_name)}>
                       <TextField
                         id="outlined-adornment-location_name"
@@ -114,21 +114,7 @@ const AddEditBranchLocation = () => {
                       )}
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={3}>
-                    <FormControl fullWidth>
-                      <TextField
-                        id="outlined-adornment-branch_pincode"
-                        type="text"
-                        value={values.branch_pincode}
-                        name="branch_pincode"
-                        onBlur={handleBlur}
-                        onChange={handleChange}
-                        label="Pincode"
-                        variant="outlined" // Add this line
-                      />
-                    </FormControl>
-                  </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-branch_email"
@@ -158,8 +144,21 @@ const AddEditBranchLocation = () => {
                       />
                     </FormControl>
                   </Grid>
-
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={3}>
+                    <FormControl fullWidth>
+                      <TextField
+                        id="outlined-adornment-branch_pincode"
+                        type="text"
+                        value={values.branch_pincode}
+                        name="branch_pincode"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        label="Pincode"
+                        variant="outlined" // Add this line
+                      />
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={3}>
                     <FormControl fullWidth sx={{ marginBottom: '18px' }}>
                       <FormControlLabel
                         control={

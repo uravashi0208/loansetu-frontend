@@ -14,8 +14,10 @@ import {
   MenuItem,
   Select,
   TextField,
-  Typography
+  Typography,
+  Popover
 } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
 import CloseIcon from '@mui/icons-material/Close';
 import * as Yup from 'yup';
 
@@ -34,6 +36,9 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
   const [courseTypeData, setCourseTypeData] = useState([]);
   const [loanTypeData, setLoanTypeData] = useState([]);
   const [countryData, setCountryData] = useState([]);
+  const [popoverAnchor, setPopoverAnchor] = useState(null);
+  const [newReference, setNewReference] = useState('');
+  const [existingReferenceOptions, setExistingReferenceOptions] = useState([]);
   const [staff, setStaff] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const tokenValue = localStorage.getItem('token');
@@ -44,8 +49,16 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
     getAllCourse();
     getAllStaff();
     getAllCountry();
+    getExistingReferenceOptions();
   }, []);
 
+  const handlePopoverOpen = (event) => {
+    setPopoverAnchor(event.currentTarget);
+  };
+
+  const handlePopoverClose = () => {
+    setPopoverAnchor(null);
+  };
   const getUniversitiesByCountry = async (country) => {
     const response = await GetRequestOnRole('/university/getuniversitybycountry/', country);
     if (response.data) {
@@ -80,6 +93,13 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
       setStaff(response.data);
     }
   };
+  const getExistingReferenceOptions = async () => {
+    // Fetch existing reference options from backend
+    const response = await GetRequest('/reference/getreference');
+    if (response.data) {
+      setExistingReferenceOptions(response.data);
+    }
+  };
 
   const initialValues = {
     assigne_staff: selectedLead.assigne_staff ? selectedLead.assigne_staff : '',
@@ -96,6 +116,21 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
     reference: selectedLead.reference ? selectedLead.reference : '',
     editlead: 'editlead',
     submit: null
+  };
+
+  const handleAddReference = async () => {
+    if (newReference.trim() !== '') {
+      // Add new reference to the database
+      const response = await PostRequest('/reference/addreference', { reference_name: newReference });
+      if (response && response.response === true) {
+        // Update existing reference options state
+        setExistingReferenceOptions([...existingReferenceOptions, newReference]);
+        setNewReference('');
+        handlePopoverClose();
+      } else {
+        showAlert(response.message, 'error');
+      }
+    }
   };
 
   return (
@@ -383,18 +418,85 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
                         </FormControl>
                       </Grid>
                       <Grid item xs={12} md={6}>
-                        <FormControl fullWidth>
-                          <TextField
-                            id="outlined-adornment-email-login"
-                            type="text"
-                            value={values.reference}
-                            name="reference"
-                            onBlur={handleBlur}
-                            onChange={handleChange}
-                            label="Reference"
-                            variant="outlined" // Add this line
-                          />
+                        <FormControl fullWidth error={Boolean(touched.reference && errors.reference)}>
+                          <InputLabel outlined>Reference</InputLabel>
+                          {userData.data.role === 'Admin' ? (
+                            <Select
+                              id="outlined-adornment-reference-login"
+                              value={values.reference}
+                              label="Reference"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              name="reference"
+                              endAdornment={
+                                userData.data.role === 'Admin' && (
+                                  <IconButton size="large" onClick={handlePopoverOpen}>
+                                    <AddIcon />
+                                  </IconButton>
+                                )
+                              }
+                            >
+                              <MenuItem value="" disabled>
+                                {userData.data.role === 'Admin' ? `Select or Add Reference` : `Select Reference`}
+                              </MenuItem>
+                              {existingReferenceOptions.map((option) => (
+                                <MenuItem key={option._id} value={option._id}>
+                                  {option.reference_name}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          ) : (
+                            <TextField
+                              id="outlined-adornment-reference-login"
+                              type="text"
+                              value={values.reference}
+                              name="reference"
+                              onBlur={handleBlur}
+                              onChange={handleChange}
+                              label="Reference"
+                              variant="outlined" // Add this line
+                              disabled
+                            />
+                          )}
+                          {touched.reference && errors.reference && (
+                            <FormHelperText error id="standard-weight-helper-text-reference">
+                              {errors.reference}
+                            </FormHelperText>
+                          )}
                         </FormControl>
+                        <Popover
+                          open={Boolean(popoverAnchor)}
+                          anchorEl={popoverAnchor}
+                          onClose={handlePopoverClose}
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center'
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center'
+                          }}
+                        >
+                          <Box p={2}>
+                            <Typography variant="h6" gutterBottom>
+                              Add New Reference
+                            </Typography>
+                            <TextField
+                              id="outlined-adornment-new-reference"
+                              type="text"
+                              value={newReference}
+                              onChange={(e) => setNewReference(e.target.value)}
+                              label="New Reference"
+                              variant="outlined"
+                              fullWidth
+                            />
+                            <Box mt={2}>
+                              <Button variant="contained" onClick={handleAddReference}>
+                                Add
+                              </Button>
+                            </Box>
+                          </Box>
+                        </Popover>
                       </Grid>
                     </Grid>
                   </Grid>

@@ -138,28 +138,32 @@ const Staff = () => {
       renderCell: (params) => (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
-            <Button
-              onClick={() => handleEdit(params.row._id)}
-              size="small"
-              style={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                border: '1px solid rgb(220 220 220)',
-                borderRadius: '5px',
-                marginRight: '6px'
-              }}
-            >
-              <EditOutlinedIcon />
-            </Button>
-            <Button
-              onClick={() => handleDelete(params.row._id)}
-              size="small"
-              style={{ width: '40px', minWidth: '40px', height: '40px', border: '1px solid rgb(220 220 220)', borderRadius: '5px' }}
-              color="error"
-            >
-              <DeleteOutlinedIcon />
-            </Button>
+            <Tooltip title="Edit">
+              <Button
+                onClick={() => handleEdit(params.row._id)}
+                size="small"
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px'
+                }}
+              >
+                <EditOutlinedIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <Button
+                onClick={() => handleDelete(params.row._id)}
+                size="small"
+                style={{ width: '40px', minWidth: '40px', height: '40px', border: '1px solid rgb(220 220 220)', borderRadius: '5px' }}
+                color="error"
+              >
+                <DeleteOutlinedIcon />
+              </Button>
+            </Tooltip>
           </div>
         </>
       )

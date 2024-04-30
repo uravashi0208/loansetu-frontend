@@ -1,5 +1,5 @@
 // material-ui
-import { Grid, Box, Button } from '@mui/material';
+import { Grid, Box, Button, Tooltip } from '@mui/material';
 import MainCard from 'ui-component/cards/MainCard';
 import CommonTable from 'ui-component/table/CommonTable';
 import { useEffect, useState } from 'react';
@@ -63,34 +63,38 @@ const Customer = () => {
       renderCell: (params) => (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
-            <Button
-              onClick={() => handleEdit(params.row._id)}
-              size="small"
-              style={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                border: '1px solid rgb(220 220 220)',
-                borderRadius: '5px',
-                marginRight: '6px'
-              }}
-            >
-              <EditOutlinedIcon />
-            </Button>
-            <Button
-              onClick={() => handleDownload(params.row._id)}
-              size="small"
-              style={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                border: '1px solid rgb(220 220 220)',
-                borderRadius: '5px',
-                marginRight: '6px'
-              }}
-            >
-              <CloudDownloadIcon />
-            </Button>
+            <Tooltip title="Update Customer">
+              <Button
+                onClick={() => handleEdit(params.row._id)}
+                size="small"
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px'
+                }}
+              >
+                <EditOutlinedIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Download Customer Excel">
+              <Button
+                onClick={() => handleDownload(params.row._id)}
+                size="small"
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px'
+                }}
+              >
+                <CloudDownloadIcon />
+              </Button>
+            </Tooltip>
           </div>
         </>
       )
@@ -371,7 +375,12 @@ const Customer = () => {
       { wch: 30 }, // Width for the third column
       { wch: 30 } // Width for the fourth column
     ];
-    XLSX.utils.sheet_set_col_widths(sheet, columnWidths);
+
+    // Apply column widths to the sheet
+    columnWidths.forEach((width, colIndex) => {
+      sheet['!cols'] = sheet['!cols'] || [];
+      sheet['!cols'][colIndex] = width;
+    });
 
     const workbook = XLSX.utils.book_new();
     XLSX.utils.book_append_sheet(workbook, sheet, 'Sheet1');

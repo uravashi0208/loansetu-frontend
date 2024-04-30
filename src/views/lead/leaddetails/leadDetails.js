@@ -80,7 +80,7 @@ const LeadDetails = ({ selectedLead }) => {
                     Reference By
                   </Typography>
                   <Typography variant="h5" color="grey" pb={1}>
-                    {selectedLead.reference}
+                    {selectedLead.referenceDetails?.reference_name}
                   </Typography>
                 </Box>
               </CardContent>

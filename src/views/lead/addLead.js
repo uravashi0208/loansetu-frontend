@@ -399,13 +399,15 @@ const AddEditLead = () => {
                           onChange={handleChange}
                           name="reference"
                           endAdornment={
-                            <IconButton size="large" onClick={handlePopoverOpen}>
-                              <AddIcon />
-                            </IconButton>
+                            roleData.data.role === 'Admin' && (
+                              <IconButton size="large" onClick={handlePopoverOpen}>
+                                <AddIcon />
+                              </IconButton>
+                            )
                           }
                         >
                           <MenuItem value="" disabled>
-                            <em>Select or Add Reference</em>
+                            {roleData.data.role === 'Admin' ? `Select or Add Reference` : `Select Reference`}
                           </MenuItem>
                           {existingReferenceOptions.map((option) => (
                             <MenuItem key={option._id} value={option._id}>

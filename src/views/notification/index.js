@@ -30,7 +30,7 @@ const Notification = () => {
   }, []);
 
   const getAllNotification = async () => {
-    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
+    const userid = userData.data?.role === 'Admin' ? 'admin' : userData.data?._id;
     setLoading(true);
     const response = await GetRequestOnRole('/notification/getnotification/', userid);
     if (response.data) {

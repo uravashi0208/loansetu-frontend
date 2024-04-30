@@ -1,5 +1,5 @@
 // material-ui
-import { Grid, Box, Button } from '@mui/material';
+import { Grid, Box, Button, Tooltip } from '@mui/material';
 import GetRequest from 'commonRequest/getRequest';
 import { useEffect, useState } from 'react';
 import MainCard from 'ui-component/cards/MainCard';
@@ -37,28 +37,32 @@ const Loantype = () => {
       renderCell: (params) => (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
-            <Button
-              onClick={() => handleEdit(params.row._id)}
-              size="small"
-              style={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                border: '1px solid rgb(220 220 220)',
-                borderRadius: '5px',
-                marginRight: '6px'
-              }}
-            >
-              <EditOutlinedIcon />
-            </Button>
-            <Button
-              onClick={() => handleDelete(params.row._id)}
-              size="small"
-              style={{ width: '40px', minWidth: '40px', height: '40px', border: '1px solid rgb(220 220 220)', borderRadius: '5px' }}
-              color="error"
-            >
-              <DeleteOutlinedIcon />
-            </Button>
+            <Tooltip title="Edit">
+              <Button
+                onClick={() => handleEdit(params.row._id)}
+                size="small"
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px'
+                }}
+              >
+                <EditOutlinedIcon />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Delete">
+              <Button
+                onClick={() => handleDelete(params.row._id)}
+                size="small"
+                style={{ width: '40px', minWidth: '40px', height: '40px', border: '1px solid rgb(220 220 220)', borderRadius: '5px' }}
+                color="error"
+              >
+                <DeleteOutlinedIcon />
+              </Button>
+            </Tooltip>
           </div>
         </>
       )

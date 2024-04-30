@@ -1,5 +1,5 @@
 // material-ui
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import CommonTable from 'ui-component/table/CommonTable';
 import { useEffect, useState } from 'react';
 import GetRequestOnRole from 'commonRequest/getRequestRole';
@@ -55,34 +55,38 @@ const CancelLead = ({ userData }) => {
       renderCell: (params) => (
         <>
           <div style={{ display: 'flex', justifyContent: 'space-between', width: '20%' }}>
-            <Button
-              onClick={() => handleOpenDialog(params.row)}
-              size="small"
-              style={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                border: '1px solid rgb(220 220 220)',
-                borderRadius: '5px',
-                marginRight: '6px'
-              }}
-            >
-              <IconEye />
-            </Button>
-            <Button
-              onClick={() => handleOpenStudentDialog(params.row)}
-              size="small"
-              style={{
-                width: '40px',
-                minWidth: '40px',
-                height: '40px',
-                border: '1px solid rgb(220 220 220)',
-                borderRadius: '5px',
-                marginRight: '6px'
-              }}
-            >
-              <IconFileDescription />
-            </Button>
+            <Tooltip title="Lead Details">
+              <Button
+                onClick={() => handleOpenDialog(params.row)}
+                size="small"
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px'
+                }}
+              >
+                <IconEye />
+              </Button>
+            </Tooltip>
+            <Tooltip title="Student Details">
+              <Button
+                onClick={() => handleOpenStudentDialog(params.row)}
+                size="small"
+                style={{
+                  width: '40px',
+                  minWidth: '40px',
+                  height: '40px',
+                  border: '1px solid rgb(220 220 220)',
+                  borderRadius: '5px',
+                  marginRight: '6px'
+                }}
+              >
+                <IconFileDescription />
+              </Button>
+            </Tooltip>
           </div>
         </>
       )
