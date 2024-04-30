@@ -112,8 +112,10 @@ const EditCustomer = () => {
 
   const getStudentById = async (id) => {
     const response = await GetByIdRequest('/student/getcustomerbyid/', id);
-    setStudentData(response.data);
-    setExaminationDetails(response.data[0].applicantDetails.education);
+    if (response.response === true) {
+      setStudentData(response.data);
+      setExaminationDetails(response.data[0].applicantDetails.education);
+    }
   };
 
   const getAllCountry = async () => {
