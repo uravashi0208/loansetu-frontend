@@ -15,9 +15,12 @@ const NavGroup = ({ item }) => {
 
   // menu list collapse & items
   const items = item.children?.map((menu) => {
+    console.log('menu :', menu);
     const tokenValue = localStorage.getItem('token');
     const roleData = JSON.parse(tokenValue);
-    if (roleData?.data.role === 'staff' && menu.id === 'staff') {
+    if (roleData?.data.role === 'staff' && (menu.id === 'staff' || menu.id === 'partner')) {
+      return null;
+    } else if (roleData?.data.role === 'partner' && (menu.id === 'staff' || menu.id === 'student' || menu.id === 'customer')) {
       return null;
     }
     switch (menu.type) {

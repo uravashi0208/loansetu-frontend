@@ -153,9 +153,9 @@ const Customer = () => {
       ],
       [
         'AADHAR NO. & PAN NO.& PASSPORT',
-        `AADHAR NO-${response.data[0].applicantDetails.aadhar_no}         PAN NO.-${response.data[0].applicantDetails.pan_no}            PASSPORT- ${response.data[0].applicantDetails.passport}  `,
-        `AADHAR NO-${response.data[0].co_applicant1_aadhar_no}            PAN NO.-${response.data[0].co_applicant1_pan_no}            PASSPORT- ${response.data[0].co_applicant1_passport}  `,
-        `AADHAR NO-${response.data[0].co_applicant2_aadhar_no}            PAN NO.-${response.data[0].co_applicant2_pan_no}            PASSPORT- ${response.data[0].co_applicant2_passport}  `
+        `AADHAR NO-${response.data[0].applicantDetails?.aadhar_no !== undefined ? response.data[0].applicantDetails?.aadhar_no : ''}           PAN NO.-${response.data[0].applicantDetails?.pan_no !== undefined ? response.data[0].applicantDetails?.pan_no : ''}            PASSPORT- ${response.data[0].applicantDetails?.passport !== undefined ? response.data[0].applicantDetails?.passport : ''}`,
+        `AADHAR NO-${response.data[0].co_applicant1_aadhar_no !== undefined ? response.data[0].co_applicant1_aadhar_no : ''}           PAN NO.-${response.data[0].co_applicant1_pan_no !== undefined ? response.data[0].co_applicant1_pan_no : ''}            PASSPORT- ${response.data[0].co_applicant1_passport !== undefined ? response.data[0].co_applicant1_passport : ''}`,
+        `AADHAR NO-${response.data[0].co_applicant2_aadhar_no !== undefined ? response.data[0].co_applicant2_aadhar_no : ''}           PAN NO.-${response.data[0].co_applicant2_pan_no !== undefined ? response.data[0].co_applicant2_pan_no : ''}            PASSPORT- ${response.data[0].co_applicant2_passport !== undefined ? response.data[0].co_applicant2_passport : ''}`
       ],
       [
         'MARITAL STATUS',
@@ -181,15 +181,15 @@ const Customer = () => {
       ],
       [
         'CURRENT ADDRESS WITH PINCODE',
-        `${response.data[0].applicantDetails.resident_address} , ${response.data[0].applicantDetails.pincode}`,
-        `${response.data[0].co_applicant1_resident_address} , ${response.data[0].co_applicant1_pincode}`,
-        `${response.data[0].co_applicant2_resident_address} , ${response.data[0].co_applicant2_pincode}`
+        `${response.data[0].applicantDetails?.resident_address !== undefined ? response.data[0].applicantDetails?.resident_address : ''} , ${response.data[0].applicantDetails.pincode !== undefined ? response.data[0].applicantDetails.pincode : ''}`,
+        `${response.data[0].co_applicant1_resident_address !== undefined ? response.data[0].co_applicant1_resident_address : ''} , ${response.data[0].co_applicant1_pincode !== undefined ? response.data[0].co_applicant1_pincode : ''}`,
+        `${response.data[0].co_applicant2_resident_address !== undefined ? response.data[0].co_applicant2_resident_address : ''} , ${response.data[0].co_applicant2_pincode !== undefined ? response.data[0].co_applicant2_pincode : ''}`
       ],
       [
         'PERMANENT ADDRESS WITH PINCODE',
-        `${response.data[0].applicantDetails.permanent_address} , ${response.data[0].applicantDetails.permanent_pincode}`,
-        `${response.data[0].co_applicant1_permanent_address} , ${response.data[0].co_applicant1_permanent_pincode}`,
-        `${response.data[0].co_applicant2_permanent_address} , ${response.data[0].co_applicant2_permanent_pincode}`
+        `${response.data[0].applicantDetails?.permanent_address !== undefined ? response.data[0].applicantDetails?.permanent_address : ''} , ${response.data[0].applicantDetails.permanent_pincode !== undefined ? response.data[0].applicantDetails.permanent_pincode : ''}`,
+        `${response.data[0].co_applicant1_permanent_address !== undefined ? response.data[0].co_applicant1_permanent_address : ''} , ${response.data[0].co_applicant1_permanent_pincode !== undefined ? response.data[0].co_applicant1_permanent_pincode : ''}`,
+        `${response.data[0].co_applicant2_permanent_address !== undefined ? response.data[0].co_applicant2_permanent_address : ''} , ${response.data[0].co_applicant2_permanent_pincode !== undefined ? response.data[0].co_applicant2_permanent_pincode : ''}`
       ],
       [
         'NO. OF YEAR IN CURRENT ADDRESS',
@@ -222,15 +222,17 @@ const Customer = () => {
         response.data[0].co_applicant2_loan_amount_required
       ],
       ['EDUCATION'],
+
       ['', 'YEAR OF PASSING', 'PERCENTAGE', 'SCHOOL/UNIVERSITY NAME'],
       ...response.data[0].applicantDetails.education.map((edu) => [edu.examination, edu.passingYear, edu.percentage, edu.school_name]),
+      [],
       [
         'ENTRANCE EXAM(GRE/IELTS/DUOLINGO/TOEFL)',
-        `${response.data[0].applicantDetails.exam}           LISTENING-${response.data[0].applicantDetails.listening},          READING-${response.data[0].applicantDetails.reading},          WRITING-${response.data[0].applicantDetails.writing},             SPEAKING-${response.data[0].applicantDetails.speaking} `
+        `${response.data[0].applicantDetails.exam !== undefined ? response.data[0].applicantDetails.exam : ''}          LISTENING.-${response.data[0].applicantDetails?.listening !== undefined ? response.data[0].applicantDetails?.listening : ''}          READING.-${response.data[0].applicantDetails?.reading !== undefined ? response.data[0].applicantDetails?.reading : ''}                      WRITING.-${response.data[0].applicantDetails?.writing !== undefined ? response.data[0].applicantDetails?.writing : ''}            SPEAKING.-${response.data[0].applicantDetails?.speaking !== undefined ? response.data[0].applicantDetails?.speaking : ''}`
       ],
       [
         'UNIVERSITY NAME AND COUSRE(THAT YOU ARE APPLYING FOR)',
-        `UNIVERSITY :${response.data[0].applicantDetails.exam}       COURSE: ${response.data[0].applicantDetails.course_name}`
+        `UNIVERSITY :${response.data[0].applicantDetails?.university !== undefined ? response.data[0].applicantDetails?.university : ''}       COURSE: ${response.data[0].applicantDetails?.course_name !== undefined ? response.data[0].applicantDetails?.course_name : ''}`
       ],
       ['EMPLOYMENT OR BUSINESS DETAILS:-'],
       ['', '', 'CO-APPLICANT-1', 'CO-APPLICANT-2'],
@@ -261,9 +263,9 @@ const Customer = () => {
       ],
       [
         'BUSINESS ADDRESS/ company address WITH PINCODE',
-        `${response.data[0].applicantDetails.bussiness_address} Pin :${response.data[0].applicantDetails.bussiness_pincode}`,
-        `${response.data[0].co_applicant1_bussiness_address} Pin :${response.data[0].co_applicant1_bussiness_pincode}`,
-        `${response.data[0].co_applicant2_bussiness_address} Pin :${response.data[0].co_applicant2_bussiness_pincode}`
+        `${response.data[0].applicantDetails?.bussiness_address !== undefined ? response.data[0].applicantDetails?.bussiness_address : ''}  ${response.data[0].applicantDetails?.bussiness_address !== undefined ? 'Pin :' + response.data[0].applicantDetails?.bussiness_pincode : ''} `,
+        `${response.data[0].co_applicant1_bussiness_address !== undefined ? response.data[0].co_applicant1_bussiness_address : ''}  ${response.data[0].co_applicant1_bussiness_address !== undefined ? 'Pin :' + response.data[0].co_applicant1_bussiness_pincode : ''} `,
+        `${response.data[0].co_applicant2_bussiness_address !== undefined ? response.data[0].co_applicant2_bussiness_address : ''}  ${response.data[0].co_applicant2_bussiness_address !== undefined ? 'Pin :' + response.data[0].co_applicant2_bussiness_pincode : ''} `
       ],
       [
         'NET MONTHLY INCOME',

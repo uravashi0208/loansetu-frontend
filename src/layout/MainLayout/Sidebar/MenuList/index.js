@@ -13,7 +13,7 @@ const MenuList = () => {
 
   const filteredMenuItems = menuItem?.items.filter((item) => {
     // Check if user role is 'staff male' and item is 'settings', then exclude it
-    return !(roleData?.data.role === 'staff' && item.id === 'settings');
+    return !((roleData?.data.role === 'staff' || roleData?.data.role === 'partner') && item.id === 'settings');
   });
   const navItems = filteredMenuItems?.map((item) => {
     switch (item.type) {

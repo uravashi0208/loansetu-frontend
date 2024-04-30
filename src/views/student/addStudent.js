@@ -40,6 +40,7 @@ const AddEditStudent = () => {
   const [universityData, setUniversityData] = useState([]);
   const [courseTypeData, setCourseTypeData] = useState([]);
   const [countryData, setCountryData] = useState([]);
+  const [examinationDetails, setExaminationDetails] = useState([{ examination: '', passingYear: '', percentage: '', school_name: '' }]);
   const [staff, setStaff] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const location = useLocation();
@@ -56,6 +57,7 @@ const AddEditStudent = () => {
   const getStudentById = async (id) => {
     const response = await GetByIdRequest('/student/getstudentbyid/', id);
     if (response.data.country) getUniversitiesByCountry(response.data.country);
+    setExaminationDetails(response.data.education);
     setStudentData(response.data);
   };
 
@@ -87,8 +89,7 @@ const AddEditStudent = () => {
     }
   };
 
-  const [examinationDetails, setExaminationDetails] = useState([{ examination: '', passingYear: '', percentage: '', backlog: '' }]);
-
+  
   const handleAddDetail = () => {
     setExaminationDetails([...examinationDetails, { examination: '', passingYear: '', percentage: '', school_name: '' }]);
   };

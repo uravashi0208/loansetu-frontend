@@ -13,7 +13,7 @@ import UpdateFormRequest from 'commonRequest/updatefoemRequest';
 const AddEditPartner = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [studentData, setStudentData] = useState([]);
+  const [PartnerData, setPartnerData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const location = useLocation();
 
@@ -24,36 +24,36 @@ const AddEditPartner = () => {
   }, []);
 
   const getStudentById = async (id) => {
-    const response = await GetByIdRequest('/student/getstudentbyid/', id);
-    if (response.data.country) getUniversitiesByCountry(response.data.country);
-    setStudentData(response.data);
+    const response = await GetByIdRequest('/partner/getpartnerbyid/', id);
+    if (response.data) setPartnerData(response.data);
   };
 
   const initialValues = {
-    partner_code: studentData.partner_code ? studentData.partner_code : '',
-    company_name: studentData.company_name ? studentData.company_name : '',
-    authorised_person_name: studentData.authorised_person_name ? studentData.authorised_person_name : '',
-    constitution: studentData.constitution ? studentData.constitution : '',
-    age: studentData.age ? studentData.age : '',
-    address: studentData.address ? studentData.address : '',
-    phone: studentData.phone ? studentData.phone : '',
-    alternate_contact_number: studentData.alternate_contact_number ? studentData.alternate_contact_number : '',
-    pan_number: studentData.pan_number ? studentData.pan_number : '',
-    email: studentData.email ? studentData.email : '',
-    present_occupation: studentData.present_occupation ? studentData.present_occupation : '',
-    rate: studentData.rate ? studentData.rate : '',
-    current_employement: studentData.current_employement ? studentData.current_employement : '',
-    qualification: studentData.qualification ? studentData.qualification : '',
-    language_known: studentData.language_known ? studentData.language_known : '',
-    reference_name: studentData.reference_name ? studentData.reference_name : '',
-    reference_contact_number: studentData.reference_contact_number ? studentData.reference_contact_number : '',
-    bank_name: studentData.bank_name ? studentData.bank_name : '',
-    branch_name: studentData.branch_name ? studentData.branch_name : '',
-    account_number: studentData.account_number ? studentData.account_number : ''
+    partner_code: PartnerData.partner_code ? PartnerData.partner_code : '',
+    company_name: PartnerData.company_name ? PartnerData.company_name : '',
+    authorised_person_name: PartnerData.authorised_person_name ? PartnerData.authorised_person_name : '',
+    constitution: PartnerData.constitution ? PartnerData.constitution : '',
+    age: PartnerData.age ? PartnerData.age : '',
+    address: PartnerData.address ? PartnerData.address : '',
+    phone: PartnerData.phone ? PartnerData.phone : '',
+    alternate_contact_number: PartnerData.alternate_contact_number ? PartnerData.alternate_contact_number : '',
+    pan_number: PartnerData.pan_number ? PartnerData.pan_number : '',
+    email: PartnerData.email ? PartnerData.email : '',
+    present_occupation: PartnerData.present_occupation ? PartnerData.present_occupation : '',
+    rate: PartnerData.rate ? PartnerData.rate : '',
+    current_employement: PartnerData.current_employement ? PartnerData.current_employement : '',
+    qualification: PartnerData.qualification ? PartnerData.qualification : '',
+    language_known: PartnerData.language_known ? PartnerData.language_known : '',
+    reference_name: PartnerData.reference_name ? PartnerData.reference_name : '',
+    reference_contact_number: PartnerData.reference_contact_number ? PartnerData.reference_contact_number : '',
+    bank_name: PartnerData.bank_name ? PartnerData.bank_name : '',
+    branch_name: PartnerData.branch_name ? PartnerData.branch_name : '',
+    account_number: PartnerData.account_number ? PartnerData.account_number : '',
+    password: ''
   };
   return (
     <>
-      <MainCard title={`${studentData.length === 0 ? 'Add' : 'Edit'} Partner`}>
+      <MainCard title={`${PartnerData.length === 0 ? 'Add' : 'Edit'} Partner`}>
         <Formik
           enableReinitialize
           initialValues={initialValues}
@@ -61,14 +61,15 @@ const AddEditPartner = () => {
             company_name: Yup.string().required('Company Name is required'),
             authorised_person_name: Yup.string().required('Authorised Person Name is required'),
             phone: Yup.string().max(10).min(10).required('Phone number is required'),
-            email: Yup.string().email('Must be a valid email').max(255).required('Email is required')
+            email: Yup.string().email('Must be a valid email').max(255).required('Email is required'),
+            password: Yup.string().required('Password is required')
           })}
           onSubmit={async (values) => {
             try {
               setLoading(true);
               let response;
-              studentData._id
-                ? (response = await UpdateFormRequest('/partner/editstudent/', values, studentData._id))
+              PartnerData._id
+                ? (response = await UpdateFormRequest('/partner/editpartner/', values, PartnerData._id))
                 : (response = await PostRequest('/partner/addpartner', values));
               if (response && response.response === true) {
                 showAlert(response.message, 'success');
@@ -275,6 +276,29 @@ const AddEditPartner = () => {
                       )}
                     </FormControl>
                   </Grid>
+                  {PartnerData.length === 0 && (
+                    <Grid item xs={12} md={4}>
+                      <FormControl fullWidth error={Boolean(touched.password && errors.password)}>
+                        <TextField
+                          id="outlined-adornment-password"
+                          type="password"
+                          value={values.password}
+                          name="password"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="Password"
+                          error={Boolean(touched.password && errors.password)}
+                          variant="outlined" // Add this line
+                        />
+                        {touched.password && errors.password && (
+                          <FormHelperText error id="standard-weight-helper-text-password">
+                            {errors.password}
+                          </FormHelperText>
+                        )}
+                      </FormControl>
+                    </Grid>
+                  )}
+
                   <Grid item xs={12} md={4}>
                     <FormControl fullWidth>
                       <TextField
@@ -289,7 +313,7 @@ const AddEditPartner = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-rate"
@@ -303,7 +327,7 @@ const AddEditPartner = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={3}>
+                  <Grid item xs={12} md={4}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-current_employement"
@@ -317,7 +341,7 @@ const AddEditPartner = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={5}>
+                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-qualification"
@@ -331,7 +355,7 @@ const AddEditPartner = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-language_known"
@@ -345,7 +369,7 @@ const AddEditPartner = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-reference_name"
@@ -359,7 +383,7 @@ const AddEditPartner = () => {
                       />
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={4}>
+                  <Grid item xs={12} md={6}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-reference_contact_number"

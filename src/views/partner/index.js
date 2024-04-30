@@ -9,6 +9,8 @@ import DeleteOutlinedIcon from '@mui/icons-material/DeleteOutlined';
 import { useNavigate } from 'react-router';
 import DeleteRequest from 'commonRequest/deleteRequest';
 import GetRequest from 'commonRequest/getRequest';
+import Swal from 'sweetalert2';
+import { useAlert } from 'ui-component/alert/alert';
 
 const StyledTooltip = styled('div')({
   cursor: 'pointer'
@@ -19,31 +21,32 @@ const StyledTooltip = styled('div')({
 
 const Partner = () => {
   const [partnerData, setPartnerData] = useState([]);
+  const { showAlert, AlertComponent } = useAlert();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
 
   const columns = [
     { field: 'id', headerName: 'ID', width: 50, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'student_name',
+      field: 'partner_code',
       headerName: 'Partner Code',
       width: 180,
       sortable: false,
-      valueGetter: (params) => `${params.row.student_name || ''}`
+      valueGetter: (params) => `${params.row.partner_code || ''}`
     },
     {
-      field: 'student_name',
+      field: 'company_name',
       headerName: 'Company name',
       width: 180,
       sortable: false,
-      valueGetter: (params) => `${params.row.student_name || ''}`
+      valueGetter: (params) => `${params.row.company_name || ''}`
     },
     {
-      field: 'student_name',
-      headerName: 'Partner name',
+      field: 'authorised_person_name',
+      headerName: 'Authorised Person Name',
       width: 180,
       sortable: false,
-      valueGetter: (params) => `${params.row.student_name || ''}`
+      valueGetter: (params) => `${params.row.authorised_person_name || ''}`
     },
     {
       field: 'email',
@@ -116,7 +119,7 @@ const Partner = () => {
   };
 
   const handleEdit = async (id) => {
-    navigate('/customer/editcustomer', { state: id });
+    navigate('/partner/addeditpartner', { state: id });
   };
 
   const handleDelete = (id) => {
@@ -155,6 +158,7 @@ const Partner = () => {
           </MainCard>
         </Grid>
       </Grid>
+      <AlertComponent />
     </>
   );
 };
