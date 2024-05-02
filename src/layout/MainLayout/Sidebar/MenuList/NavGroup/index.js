@@ -31,13 +31,6 @@ const NavGroup = ({ item }) => {
 
   // menu list collapse & items
   const items = item.children?.map((menu) => {
-    console.log(
-      "roleData?.data.role === 'staff' && menu.id === 'partner' && permissions[3]?.view === true :",
-      roleData?.data.role === 'staff',
-      menu.id === 'partner',
-      permissions[3]?.view,
-      permissions[3]?.view === true
-    );
     if (roleData?.data.role === 'staff' && menu.id === 'partner' && permissions[3]?.view === true) {
       return <NavItem key={menu.id} item={menu} level={1} />;
     } else if (roleData?.data.role === 'staff' && (menu.id === 'staff' || menu.id === 'partner')) {
