@@ -23,7 +23,6 @@ import { Box, Stack } from '@mui/system';
 import { gridSpacing } from 'store/constant';
 
 const StudentDetails = ({ open, handleClose, selectedLead }) => {
-  console.log('selectedLead :', selectedLead);
   //   const tokenValue = localStorage.getItem('token');
   //   const userData = JSON.parse(tokenValue);
 

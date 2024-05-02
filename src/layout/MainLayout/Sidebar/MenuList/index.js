@@ -12,7 +12,7 @@ const MenuList = () => {
   const roleData = JSON.parse(tokenValue);
 
   const filteredMenuItems = menuItem?.items.filter((item) => {
-    // Check if user role is 'staff male' and item is 'settings', then exclude it
+    // Check if user role is 'staff ' and item is 'settings', then exclude it
     return !((roleData?.data.role === 'staff' || roleData?.data.role === 'partner') && item.id === 'settings');
   });
   const navItems = filteredMenuItems?.map((item) => {

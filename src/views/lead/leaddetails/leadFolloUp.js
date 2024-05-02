@@ -45,7 +45,7 @@ const LeadFollowUp = ({ selectedLead }) => {
                   }
                 }}
               >
-                {leadFollowUp.userDetails.user_name} - {leadFollowUp.followup_place}{' '}
+                {leadFollowUp.userDetails.user_name || leadFollowUp.userDetails.authorised_person_name} - {leadFollowUp.followup_place}{' '}
                 {moment(leadFollowUp.createdAt).format('MM-DD-YYYY hh:mm A')}
               </AccordionSummary>
               <AccordionDetails>

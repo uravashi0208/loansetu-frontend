@@ -96,7 +96,6 @@ const EditStaffProfile = () => {
             aadhar_number: Yup.string().max(255).required('Aadhar number is required')
           })}
           onSubmit={async (values) => {
-            console.log('Loading :', loading);
             try {
               setLoading(true);
               let response = await UpdateFormRequest('/staff/editstaff/', values, staffData._id);
@@ -111,7 +110,6 @@ const EditStaffProfile = () => {
                 showAlert(response.message, 'error');
               }
             } catch (err) {
-              console.log('err :', err);
               setLoading(false);
             }
           }}

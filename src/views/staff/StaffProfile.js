@@ -114,7 +114,6 @@ const StaffProfile = () => {
             contract_pdf: Yup.string().required('Please upload contract pdf file.')
           })}
           onSubmit={async (values) => {
-            console.log('Loading :', loading);
             try {
               setLoading(true);
               const formData = new FormData();
@@ -139,7 +138,6 @@ const StaffProfile = () => {
                 showAlert(response.message, 'error');
               }
             } catch (err) {
-              console.log('err :', err);
               setLoading(false);
             }
           }}

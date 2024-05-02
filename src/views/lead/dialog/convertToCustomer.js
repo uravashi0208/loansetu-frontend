@@ -137,7 +137,6 @@ const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
               service_staff: Yup.string().required('Service Staff is required')
             })}
             onSubmit={async (values) => {
-              console.log('values :', values);
               try {
                 setLoading(true);
                 const formData = new FormData();
@@ -161,7 +160,6 @@ const LeadConvertToCustomer = ({ open, handleClose, selectedLead }) => {
                   showAlert(response.message, 'error');
                 }
               } catch (err) {
-                console.log('err :', err);
                 setLoading(false);
               }
             }}

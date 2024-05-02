@@ -121,7 +121,7 @@ const LeadDetails = ({ selectedLead }) => {
                     Follow Up Date
                   </Typography>
                   <Typography variant="h5" color="grey" pb={1}>
-                    lad Information
+                    lead Information
                   </Typography>
                 </Box>
                 <Box sx={{ borderBottom: '1px solid #8684841f' }}>
@@ -137,7 +137,7 @@ const LeadDetails = ({ selectedLead }) => {
                     Created By
                   </Typography>
                   <Typography variant="h5" color="grey" pb={1}>
-                    {selectedLead.userDetails.user_name}
+                    {selectedLead.userDetails.user_name || selectedLead.userDetails.authorised_person_name}
                   </Typography>
                 </Box>
                 <Box sx={{ borderBottom: '1px solid #8684841f' }}>

@@ -133,9 +133,7 @@ const Customer = () => {
   };
 
   const handleDownload = async (id) => {
-    console.log('/customer/downloadcustomer', { state: id });
     const response = await GetByIdRequest('/student/getcustomerbyid/', id);
-    console.log('response :', response.data);
     const dataForExcel = [
       ['DETAILS', 'APPLICANT (Student)', 'CO-APPLICANT-1', 'CO-APPLICANT-2'],
       ['NAME', response.data[0].applicantDetails.student_name, response.data[0].co_applicant1_name, response.data[0].co_applicant2_name],

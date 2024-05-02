@@ -14,7 +14,6 @@ import GetRequest from 'commonRequest/getRequest';
 import UpdateFormRequest from 'commonRequest/updatefoemRequest';
 
 const AssignLead = ({ open, handleClose, selectedLead }) => {
-  console.log('selectedLead :', selectedLead);
   const [loading, setLoading] = useState(false);
   const [staff, setStaff] = useState([]);
   const { showAlert, AlertComponent } = useAlert();

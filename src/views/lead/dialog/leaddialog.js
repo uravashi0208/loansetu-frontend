@@ -22,6 +22,7 @@ import { styled } from '@mui/material/styles';
 import LeadConvertToCustomer from './convertToCustomer';
 import UpdateFormRequest from 'commonRequest/updatefoemRequest';
 import { useAlert } from 'ui-component/alert/alert';
+import LeadActivity from '../leaddetails/leadActivity';
 
 const LeadDialog = ({ open, handleClose, selectedLead }) => {
   const [value, setValue] = useState('1');
@@ -146,46 +147,56 @@ const LeadDialog = ({ open, handleClose, selectedLead }) => {
           <CloseIcon />
         </IconButton>
         <DialogContent>
-          <Box sx={{ borderBottom: 0, borderColor: 'divider', display: 'flex', justifyContent: 'center', color: '#7b7878e6' }}>
-            <Tooltip title="Edit Lead">
-              <IconEdit style={{ cursor: 'pointer' }} onClick={() => handleLeadupdateOpenDialog(selectedLead._id)} />
-            </Tooltip>
-            <Tooltip title="Lead Followup">
-              <IconSend style={{ marginLeft: '40px', cursor: 'pointer' }} onClick={() => handleOpenDialog(selectedLead._id)} />
-            </Tooltip>
-            <Tooltip title="Lead Assign To">
-              <IconTrendingUp
-                style={{ marginLeft: '40px', cursor: 'pointer' }}
-                onClick={() => handleLeadAssignToOpenDialog(selectedLead._id)}
-              />
-            </Tooltip>
-            <Tooltip title="Convert To Customer">
-              <IconUserPlus style={{ marginLeft: '40px', cursor: 'pointer' }} onClick={() => handleConvertCustomer()} />
-            </Tooltip>
-            <Tooltip title="Delete Lead">
-              <IconTrash style={{ marginLeft: '40px', cursor: 'pointer' }} />
-            </Tooltip>
-            <Tooltip title="Change Status">
-              <IconStatusChange
-                style={{ marginLeft: '40px', cursor: 'pointer' }}
-                onClick={() => handleChangeStatusOpenDialog(selectedLead._id)}
-              />
-            </Tooltip>
-          </Box>
+          {userData.data.role != 'partner' && (
+            <Box sx={{ borderBottom: 0, borderColor: 'divider', display: 'flex', justifyContent: 'center', color: '#7b7878e6' }}>
+              <Tooltip title="Edit Lead">
+                <IconEdit style={{ cursor: 'pointer' }} onClick={() => handleLeadupdateOpenDialog(selectedLead._id)} />
+              </Tooltip>
+              <Tooltip title="Lead Followup">
+                <IconSend style={{ marginLeft: '40px', cursor: 'pointer' }} onClick={() => handleOpenDialog(selectedLead._id)} />
+              </Tooltip>
+              <Tooltip title="Lead Assign To">
+                <IconTrendingUp
+                  style={{ marginLeft: '40px', cursor: 'pointer' }}
+                  onClick={() => handleLeadAssignToOpenDialog(selectedLead._id)}
+                />
+              </Tooltip>
+              <Tooltip title="Convert To Customer">
+                <IconUserPlus style={{ marginLeft: '40px', cursor: 'pointer' }} onClick={() => handleConvertCustomer()} />
+              </Tooltip>
+              <Tooltip title="Delete Lead">
+                <IconTrash style={{ marginLeft: '40px', cursor: 'pointer' }} />
+              </Tooltip>
+              <Tooltip title="Change Status">
+                <IconStatusChange
+                  style={{ marginLeft: '40px', cursor: 'pointer' }}
+                  onClick={() => handleChangeStatusOpenDialog(selectedLead._id)}
+                />
+              </Tooltip>
+            </Box>
+          )}
           <TabContext value={value}>
             <Box sx={{ borderBottom: 0, borderColor: 'divider', display: 'flex', justifyContent: 'center' }}>
               <TabList onChange={handleChange} aria-label="lab API tabs example">
                 <Tab label="Lead Details" value="1" />
-                <Tab label="Lead FollowUp" value="2" />
+                {userData.data.role === 'partner' && <Tab label="Lead Activity" value="2" />}
+                {userData.data.role !== 'partner' && <Tab label="Lead FollowUp" value="2" />}
                 <Tab label="Lead history" value="3" />
               </TabList>
             </Box>
             <TabPanel value="1">
               <LeadDetails selectedLead={selectedLead} />
             </TabPanel>
-            <TabPanel value="2">
-              <LeadFollowUp selectedLead={selectedLead} />
-            </TabPanel>
+            {userData.data.role === 'partner' && (
+              <TabPanel value="2">
+                <LeadActivity selectedLead={selectedLead} />
+              </TabPanel>
+            )}
+            {userData.data.role !== 'partner' && (
+              <TabPanel value="2">
+                <LeadFollowUp selectedLead={selectedLead} />
+              </TabPanel>
+            )}
             <TabPanel value="3">
               <LeadHistory selectedLead={selectedLead} />
             </TabPanel>
