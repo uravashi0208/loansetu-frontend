@@ -30,11 +30,10 @@ const NewLead = ({ userData }) => {
     },
     { field: 'phone', headerName: 'Phone Number', width: 130 },
     {
-      field: 'userDetails.user_name || userDetails.authorised_person_name',
+      field: 'userDetails.user_name || userDetails.company_name',
       headerName: 'Created By',
       width: 150,
-      valueGetter: (params) =>
-        params.row.userDetails ? params.row.userDetails.user_name || params.row.userDetails.authorised_person_name || '' : ''
+      valueGetter: (params) => (params.row.userDetails ? params.row.userDetails.user_name || params.row.userDetails.company_name || '' : '')
     },
     {
       field: 'createdAt',

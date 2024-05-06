@@ -29,7 +29,14 @@ const BranchLocation = () => {
       sortable: false,
       valueGetter: (params) => `${params.row.location_name || ''}`
     },
-    { field: 'status', headerName: 'Status', width: 200 },
+    {
+      field: 'branch_city',
+      headerName: 'City',
+      width: 200,
+      sortable: false,
+      valueGetter: (params) => `${params.row.branch_city || ''}`
+    },
+    { field: 'status', headerName: 'Status', width: 100 },
     {
       field: 'actions',
       headerName: 'Actions',

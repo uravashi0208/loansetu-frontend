@@ -14,16 +14,6 @@ const headerSX = {
   backgroundColor: '#070d59'
 };
 const LeadDetails = ({ selectedLead }) => {
-  // getleadbyid;
-  // const [studentData, setStudentData] = useState([]);
-  // useEffect(() => {
-  //   getStudentById(selectedLead._id);
-  // }, []);
-  // const getStudentById = async (id) => {
-  //   const response = await GetByIdRequest('/student/getleadbyid/', id);
-  //   setStudentData(response.data);
-  // };
-
   const theme = useTheme();
   return (
     <>
@@ -80,7 +70,7 @@ const LeadDetails = ({ selectedLead }) => {
                     Reference By
                   </Typography>
                   <Typography variant="h5" color="grey" pb={1}>
-                    {selectedLead.referenceDetails?.reference_name}
+                    {selectedLead.referenceDetails?.company_name}
                   </Typography>
                 </Box>
               </CardContent>
@@ -137,7 +127,7 @@ const LeadDetails = ({ selectedLead }) => {
                     Created By
                   </Typography>
                   <Typography variant="h5" color="grey" pb={1}>
-                    {selectedLead.userDetails.user_name || selectedLead.userDetails.authorised_person_name}
+                    {selectedLead.userDetails.user_name || selectedLead.userDetails.company_name}
                   </Typography>
                 </Box>
                 <Box sx={{ borderBottom: '1px solid #8684841f' }}>

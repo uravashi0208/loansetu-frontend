@@ -178,9 +178,9 @@ const Staff = () => {
     setLoading(true);
     const response = await GetRequest('/staff/getstaff');
     if (response.data) {
-      const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.user_status }));
-      const staffRecords = modifiedData.filter((record) => record.role === 'staff');
-      setStaffData(staffRecords);
+      const staffRecords = response.data.filter((record) => record.role === 'staff');
+      const modifiedData = staffRecords.map((row, index) => ({ ...row, id: index, status: row.user_status }));
+      setStaffData(modifiedData);
       setLoading(false);
     }
   };

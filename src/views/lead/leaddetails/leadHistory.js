@@ -41,12 +41,12 @@ const LeadHistory = ({ selectedLead }) => {
               <ListItem alignItems="flex-start" key={leadHistory._id}>
                 <ListItemAvatar>
                   <Avatar
-                    alt={leadHistory.userDetails.user_name || leadHistory.userDetails.authorised_person_name}
+                    alt={leadHistory.userDetails.user_name || leadHistory.userDetails.company_name}
                     src="/static/images/avatar/1.jpg"
                   />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={leadHistory.userDetails.user_name || leadHistory.userDetails.authorised_person_name}
+                  primary={leadHistory.userDetails.user_name || leadHistory.userDetails.company_name}
                   secondary={<React.Fragment>{leadHistory.message}</React.Fragment>}
                 />
                 <ListItemText secondary={moment(leadHistory.createdAt).format('MM-DD-YYYY HH:mm A')} sx={{ textAlign: 'center' }} />

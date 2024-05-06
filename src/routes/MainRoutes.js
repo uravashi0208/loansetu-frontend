@@ -33,6 +33,7 @@ const EditStaffProfile = Loadable(lazy(() => import('views/staff/EditStaffProfil
 const EditCustomer = Loadable(lazy(() => import('views/customer/EditCustomer')));
 const Partner = Loadable(lazy(() => import('views/partner/index')));
 const AddEditPartner = Loadable(lazy(() => import('views/partner/addeditPartner')));
+const LeadReport = Loadable(lazy(() => import('views/reports/leadreports/index')));
 
 // ==============================|| MAIN ROUTING ||============================== //
 
@@ -252,6 +253,15 @@ const MainRoutes = {
         {
           path: 'addeditpartner',
           element: <AddEditPartner />
+        }
+      ]
+    },
+    {
+      path: 'report/leadreport',
+      children: [
+        {
+          path: '',
+          element: <LeadReport />
         }
       ]
     }

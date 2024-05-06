@@ -117,7 +117,7 @@ const NotificationList = ({ notificationlist }) => {
               <ListItemAvatar>
                 <Avatar alt="John Doe" src={User1} />
               </ListItemAvatar>
-              <ListItemText primary={notification.studentsDetails.user_name} />
+              <ListItemText primary={notification.studentsDetails.user_name || notification.studentsDetails.company_name} />
               <ListItemSecondaryAction>
                 <Grid container justifyContent="flex-end">
                   <Grid item xs={12}>

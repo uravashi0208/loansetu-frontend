@@ -60,9 +60,11 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
     setPopoverAnchor(null);
   };
   const getUniversitiesByCountry = async (country) => {
-    const response = await GetRequestOnRole('/university/getuniversitybycountry/', country);
-    if (response.data) {
-      setUniversityData(response.data);
+    if (country !== undefined) {
+      const response = await GetRequestOnRole('/university/getuniversitybycountry/', country);
+      if (response.data) {
+        setUniversityData(response.data);
+      }
     }
   };
 
@@ -71,7 +73,9 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
     if (response.data) {
       setCountryData(response.data);
     }
-    getUniversitiesByCountry(selectedLead.country);
+    if (selectedLead.country !== '') {
+      getUniversitiesByCountry(selectedLead.country);
+    }
   };
 
   const getAllTypeOfLoan = async () => {
@@ -440,7 +444,7 @@ const LeadUpdate = ({ open, handleClose, selectedLead }) => {
                               </MenuItem>
                               {existingReferenceOptions.map((option) => (
                                 <MenuItem key={option._id} value={option._id}>
-                                  {option.reference_name}
+                                  {option.company_name}
                                 </MenuItem>
                               ))}
                             </Select>

@@ -38,6 +38,7 @@ const AddEditLead = () => {
   const [countryData, setCountryData] = useState([]);
   const [existingReferenceOptions, setExistingReferenceOptions] = useState([]); // Define state for existing reference options
   const [staff, setStaff] = useState([]);
+  const [permissions, setPermissions] = useState([]);
   const [popoverAnchor, setPopoverAnchor] = useState(null);
   const [newReference, setNewReference] = useState('');
   const { showAlert, AlertComponent } = useAlert();
@@ -54,6 +55,7 @@ const AddEditLead = () => {
     getAllStaff();
     getAllCountry();
     getExistingReferenceOptions();
+    getStaffPermissionById();
   }, []);
 
   const handlePopoverOpen = (event) => {
@@ -77,9 +79,11 @@ const AddEditLead = () => {
   };
 
   const getUniversitiesByCountry = async (country) => {
-    const response = await GetRequestOnRole('/university/getuniversitybycountry/', country);
-    if (response.data) {
-      setUniversityData(response.data);
+    if (country !== undefined) {
+      const response = await GetRequestOnRole('/university/getuniversitybycountry/', country);
+      if (response.data) {
+        setUniversityData(response.data);
+      }
     }
   };
 
@@ -106,7 +110,16 @@ const AddEditLead = () => {
   const getAllStaff = async () => {
     const response = await GetRequest('/staff/getstaff');
     if (response.data) {
-      setStaff(response.data);
+      const staffRecords = response.data.filter((record) => record.role != 'partner');
+      setStaff(staffRecords);
+    }
+  };
+
+  const getStaffPermissionById = async () => {
+    const response = await GetByIdRequest('/staff/getstaffpermissionbyid/', roleData.data?._id);
+    if (response.response === true) {
+      const permissionsData = response.data.permissions;
+      setPermissions(permissionsData);
     }
   };
 
@@ -124,7 +137,8 @@ const AddEditLead = () => {
     remark: studentData.remark ? studentData.remark : '',
     isLead: true,
     createdBy: roleData.data._id,
-    reference: studentData.reference ? studentData.reference : '',
+    reference: roleData.data.role === 'partner' ? roleData.data._id : studentData.reference ? studentData.reference : '',
+    area_post_code: studentData.area_post_code ? studentData.area_post_code : '',
     submit: null
   };
 
@@ -152,15 +166,21 @@ const AddEditLead = () => {
             student_name: Yup.string().required('Name is required'),
             phone: Yup.string().max(10).min(10).required('Phone number is required'),
             loantype: Yup.string().required('Loan type is required'),
-            reference: Yup.string().required('Reference is required')
+            reference: Yup.string().required('Reference is required'),
+            area_post_code: Yup.string().required('Postcode is required')
           })}
           onSubmit={async (values) => {
             try {
               setLoading(true);
               let response;
-              studentData._id
-                ? (response = await UpdateFormRequest('/student/editstudent/', values, studentData._id))
-                : (response = await PostRequest('/student/addstudent', values));
+              if (roleData.data.role === 'partner') {
+                response = await PostRequest('/student/addpartnerlead', values);
+              }
+              else {
+                studentData._id
+                  ? (response = await UpdateFormRequest('/student/editstudent/', values, studentData._id))
+                  : (response = await PostRequest('/student/addstudent', values));
+              }
               if (response && response.response === true) {
                 showAlert(response.message, 'success');
                 setTimeout(() => {
@@ -301,17 +321,23 @@ const AddEditLead = () => {
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
-                      <FormControl fullWidth>
+                      <FormControl fullWidth error={Boolean(touched.area_post_code && errors.area_post_code)}>
                         <TextField
-                          id="outlined-adornment-city-login"
-                          type="text"
-                          value={values.city}
-                          name="city"
+                          id="outlined-adornment-area_post_code"
+                          value={values.area_post_code}
+                          name="area_post_code"
                           onBlur={handleBlur}
                           onChange={handleChange}
-                          label="City"
+                          label="Area Post Code"
+                          type="text"
                           variant="outlined" // Add this line
+                          error={Boolean(touched.area_post_code && errors.area_post_code)}
                         />
+                        {touched.area_post_code && errors.area_post_code && (
+                          <FormHelperText error id="standard-weight-helper-text-area_post_code">
+                            {errors.area_post_code}
+                          </FormHelperText>
+                        )}
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={6}>
@@ -388,73 +414,77 @@ const AddEditLead = () => {
                         </Select>
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth error={Boolean(touched.reference && errors.reference)}>
-                        <InputLabel outlined>Reference</InputLabel>
-                        <Select
-                          id="outlined-adornment-reference-login"
-                          value={values.reference}
-                          label="Reference"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          name="reference"
-                          endAdornment={
-                            roleData.data.role === 'Admin' && (
-                              <IconButton size="large" onClick={handlePopoverOpen}>
-                                <AddIcon />
-                              </IconButton>
-                            )
-                          }
-                        >
-                          <MenuItem value="" disabled>
-                            {roleData.data.role === 'Admin' ? `Select or Add Reference` : `Select Reference`}
-                          </MenuItem>
-                          {existingReferenceOptions.map((option) => (
-                            <MenuItem key={option._id} value={option._id}>
-                              {option.reference_name}
+                    {roleData.data.role !== 'partner' && (
+                      <Grid item xs={12} md={6}>
+                        <FormControl fullWidth error={Boolean(touched.reference && errors.reference)}>
+                          <InputLabel outlined>Reference</InputLabel>
+                          <Select
+                            id="outlined-adornment-reference-login"
+                            value={values.reference}
+                            label="Reference"
+                            onBlur={handleBlur}
+                            onChange={handleChange}
+                            name="reference"
+                            endAdornment={
+                              (roleData.data.role === 'Admin' || permissions[3]?.view === true || roleData.data.role === 'staff') && (
+                                <IconButton size="large" onClick={handlePopoverOpen}>
+                                  <AddIcon />
+                                </IconButton>
+                              )
+                            }
+                          >
+                            <MenuItem value="" disabled>
+                              {roleData.data.role === 'Admin' || permissions[3]?.view === true || roleData.data.role === 'staff'
+                                ? `Select or Add Reference`
+                                : `Select Reference`}
                             </MenuItem>
-                          ))}
-                        </Select>
-                        {touched.reference && errors.reference && (
-                          <FormHelperText error id="standard-weight-helper-text-reference">
-                            {errors.reference}
-                          </FormHelperText>
-                        )}
-                      </FormControl>
-                      <Popover
-                        open={Boolean(popoverAnchor)}
-                        anchorEl={popoverAnchor}
-                        onClose={handlePopoverClose}
-                        anchorOrigin={{
-                          vertical: 'bottom',
-                          horizontal: 'center'
-                        }}
-                        transformOrigin={{
-                          vertical: 'top',
-                          horizontal: 'center'
-                        }}
-                      >
-                        <Box p={2}>
-                          <Typography variant="h6" gutterBottom>
-                            Add New Reference
-                          </Typography>
-                          <TextField
-                            id="outlined-adornment-new-reference"
-                            type="text"
-                            value={newReference}
-                            onChange={(e) => setNewReference(e.target.value)}
-                            label="New Reference"
-                            variant="outlined"
-                            fullWidth
-                          />
-                          <Box mt={2}>
-                            <Button variant="contained" onClick={handleAddReference}>
-                              Add
-                            </Button>
+                            {existingReferenceOptions.map((option) => (
+                              <MenuItem key={option._id} value={option._id}>
+                                {option.company_name}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                          {touched.reference && errors.reference && (
+                            <FormHelperText error id="standard-weight-helper-text-reference">
+                              {errors.reference}
+                            </FormHelperText>
+                          )}
+                        </FormControl>
+                        <Popover
+                          open={Boolean(popoverAnchor)}
+                          anchorEl={popoverAnchor}
+                          onClose={handlePopoverClose}
+                          anchorOrigin={{
+                            vertical: 'bottom',
+                            horizontal: 'center'
+                          }}
+                          transformOrigin={{
+                            vertical: 'top',
+                            horizontal: 'center'
+                          }}
+                        >
+                          <Box p={2}>
+                            <Typography variant="h6" gutterBottom>
+                              Add New Reference
+                            </Typography>
+                            <TextField
+                              id="outlined-adornment-new-reference"
+                              type="text"
+                              value={newReference}
+                              onChange={(e) => setNewReference(e.target.value)}
+                              label="New Reference"
+                              variant="outlined"
+                              fullWidth
+                            />
+                            <Box mt={2}>
+                              <Button variant="contained" onClick={handleAddReference}>
+                                Add
+                              </Button>
+                            </Box>
                           </Box>
-                        </Box>
-                      </Popover>
-                    </Grid>
+                        </Popover>
+                      </Grid>
+                    )}
                   </Grid>
                 </Grid>
 

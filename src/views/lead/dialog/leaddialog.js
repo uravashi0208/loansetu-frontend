@@ -8,7 +8,7 @@ import { Button, DialogActions, Paper, Tab, Tooltip, Typography } from '@mui/mat
 import ErrorOutlineOutlinedIcon from '@mui/icons-material/ErrorOutlineOutlined';
 
 // Importing icons from @tabler/icons-react
-import { IconEdit, IconSend, IconTrendingUp, IconUserPlus, IconTrash, IconStatusChange } from '@tabler/icons-react';
+import { IconEdit, IconSend, IconTrendingUp, IconUserPlus, IconStatusChange } from '@tabler/icons-react';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Box } from '@mui/system';
 import LeadDetails from '../leaddetails/leadDetails';
@@ -25,6 +25,7 @@ import { useAlert } from 'ui-component/alert/alert';
 import LeadActivity from '../leaddetails/leadActivity';
 
 const LeadDialog = ({ open, handleClose, selectedLead }) => {
+  console.log('selectedLead:', selectedLead);
   const [value, setValue] = useState('1');
   const [leadupdateOpenDialog, setLeadupdateOpenDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
@@ -164,9 +165,9 @@ const LeadDialog = ({ open, handleClose, selectedLead }) => {
               <Tooltip title="Convert To Customer">
                 <IconUserPlus style={{ marginLeft: '40px', cursor: 'pointer' }} onClick={() => handleConvertCustomer()} />
               </Tooltip>
-              <Tooltip title="Delete Lead">
+              {/* <Tooltip title="Delete Lead">
                 <IconTrash style={{ marginLeft: '40px', cursor: 'pointer' }} />
-              </Tooltip>
+              </Tooltip> */}
               <Tooltip title="Change Status">
                 <IconStatusChange
                   style={{ marginLeft: '40px', cursor: 'pointer' }}

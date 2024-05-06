@@ -17,10 +17,11 @@ const Notification = () => {
   const columns = [
     { field: 'id', headerName: 'ID', width: 60, valueGetter: (params) => params.row.id + 1 },
     {
-      field: 'studentsDetails.user_name',
+      field: 'studentsDetails.user_name || studentsDetails.company_name',
       headerName: 'Assigner Name',
       width: 300,
-      valueGetter: (params) => (params.row.studentsDetails ? params.row.studentsDetails.user_name || '' : '')
+      valueGetter: (params) =>
+        params.row.studentsDetails ? params.row.studentsDetails.user_name || params.row.studentsDetails.company_name || '' : ''
     },
     { field: 'message', headerName: 'Message', width: 400 }
   ];

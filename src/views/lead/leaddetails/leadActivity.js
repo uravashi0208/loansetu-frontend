@@ -95,14 +95,14 @@ const LeadActivity = ({ selectedLead }) => {
                           <Typography variant="caption">{leadFollowUp.timeAgo}</Typography>
                         </Grid>
                         <Grid item>
-                          <Avatar alt={leadFollowUp.userDetails.authorised_person_name} src="/static/images/avatar/1.jpg" />
+                          <Avatar alt={leadFollowUp.userDetails.company_name} src="/static/images/avatar/1.jpg" />
                         </Grid>
                       </Grid>
                     </Grid>
                     <Grid item>
                       <Grid container spacing={1}>
                         <Grid item xs={12} md={12} lg={12}>
-                          <Typography variant="subtitle1">{leadFollowUp.userDetails.authorised_person_name}</Typography>
+                          <Typography variant="subtitle1">{leadFollowUp.userDetails.company_name}</Typography>
                           <Typography variant="subtitle2">{leadFollowUp.activity_log_details}</Typography>
                         </Grid>
                       </Grid>

@@ -1,5 +1,18 @@
 // material-ui
-import { Box, Button, FormControl, FormHelperText, TextField, Grid, FormControlLabel, Switch, CircularProgress } from '@mui/material';
+import {
+  Box,
+  Button,
+  FormControl,
+  FormHelperText,
+  TextField,
+  Grid,
+  FormControlLabel,
+  Switch,
+  CircularProgress,
+  InputLabel,
+  Select,
+  MenuItem
+} from '@mui/material';
 import * as Yup from 'yup';
 import { Formik } from 'formik';
 import { useEffect, useState } from 'react';
@@ -10,6 +23,7 @@ import PostRequest from 'commonRequest/postRequest';
 import GetByIdRequest from 'commonRequest/getByIdRequest';
 import UpdateRequest from 'commonRequest/updateRequest';
 import { useAlert } from 'ui-component/alert/alert';
+import GetRequest from 'commonRequest/getRequest';
 
 // project imports
 
@@ -19,6 +33,7 @@ const AddEditBranchLocation = () => {
   const [status, setStatus] = useState(false);
   const [loading, setLoading] = useState(false);
   const [branchLocation, setBranchlocation] = useState([]);
+  const [cityData, setCityData] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +42,7 @@ const AddEditBranchLocation = () => {
     if (location && location.state !== null) {
       getBranchById(location.state);
     }
+    getAllCity();
   }, []);
 
   const getBranchById = async (id) => {
@@ -35,11 +51,19 @@ const AddEditBranchLocation = () => {
     setBranchlocation(response.data);
   };
 
+  const getAllCity = async () => {
+    const response = await GetRequest('/branchlocation/getcity');
+    if (response.data) {
+      setCityData(response.data);
+    }
+  };
+
   const initialValues = {
     location_name: branchLocation.location_name ? branchLocation.location_name : '',
     branch_address: branchLocation.branch_address ? branchLocation.branch_address : '',
     branch_pincode: branchLocation.branch_pincode ? branchLocation.branch_pincode : '',
     branch_email: branchLocation.branch_email ? branchLocation.branch_email : '',
+    branch_city: branchLocation.branch_city ? branchLocation.branch_city : '',
     status: branchLocation.status ? status : false
   };
 
@@ -53,7 +77,8 @@ const AddEditBranchLocation = () => {
           enableReinitialize
           initialValues={initialValues}
           validationSchema={Yup.object().shape({
-            location_name: Yup.string().required('Location name is required')
+            location_name: Yup.string().required('Location name is required'),
+            branch_city: Yup.string().required('City name is required')
           })}
           onSubmit={async (values) => {
             try {
@@ -65,6 +90,7 @@ const AddEditBranchLocation = () => {
                     branch_address: values.branch_address,
                     branch_pincode: values.branch_pincode,
                     branch_email: values.branch_email,
+                    branch_city: values.branch_city,
                     status: status,
                     id: branchLocation._id
                   }))
@@ -73,6 +99,7 @@ const AddEditBranchLocation = () => {
                     branch_address: values.branch_address,
                     branch_pincode: values.branch_pincode,
                     branch_email: values.branch_email,
+                    branch_city: values.branch_city,
                     status: status
                   }));
               if (response.response === true) {
@@ -94,7 +121,7 @@ const AddEditBranchLocation = () => {
             <form noValidate autoComplete="off" onSubmit={handleSubmit}>
               <Grid item xs={12}>
                 <Grid container spacing={gridSpacing}>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4}>
                     <FormControl fullWidth error={Boolean(touched.location_name && errors.location_name)}>
                       <TextField
                         id="outlined-adornment-location_name"
@@ -114,7 +141,34 @@ const AddEditBranchLocation = () => {
                       )}
                     </FormControl>
                   </Grid>
-                  <Grid item xs={12} md={6}>
+                  <Grid item xs={12} md={4}>
+                    <FormControl fullWidth error={Boolean(touched.branch_city && errors.branch_city)}>
+                      <InputLabel outlined>Location City</InputLabel>
+                      <Select
+                        id="outlined-adornment-branch_city-login"
+                        value={values.branch_city}
+                        label="Location City"
+                        onBlur={handleBlur}
+                        onChange={handleChange}
+                        name="branch_city"
+                      >
+                        <MenuItem value="" disabled>
+                          <em>None</em>
+                        </MenuItem>
+                        {cityData.map((option) => (
+                          <MenuItem key={option.city_name} value={option.city_name}>
+                            {option.city_name}
+                          </MenuItem>
+                        ))}
+                      </Select>
+                      {touched.branch_city && errors.branch_city && (
+                        <FormHelperText error id="standard-weight-helper-text-branch_city">
+                          {errors.branch_city}
+                        </FormHelperText>
+                      )}
+                    </FormControl>
+                  </Grid>
+                  <Grid item xs={12} md={4}>
                     <FormControl fullWidth>
                       <TextField
                         id="outlined-adornment-branch_email"

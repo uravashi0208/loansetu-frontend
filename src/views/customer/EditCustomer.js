@@ -126,9 +126,11 @@ const EditCustomer = () => {
   };
 
   const getUniversitiesByCountry = async (country) => {
-    const response = await GetRequestOnRole('/university/getuniversitybycountry/', country);
-    if (response.data) {
-      setUniversityData(response.data);
+    if (country !== undefined) {
+      const response = await GetRequestOnRole('/university/getuniversitybycountry/', country);
+      if (response.data) {
+        setUniversityData(response.data);
+      }
     }
   };
 
