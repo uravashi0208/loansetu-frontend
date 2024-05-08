@@ -148,7 +148,7 @@ const AddEditLead = () => {
       const response = await PostRequest('/reference/addreference', { reference_name: newReference });
       if (response && response.response === true) {
         // Update existing reference options state
-        setExistingReferenceOptions([...existingReferenceOptions, newReference]);
+        getExistingReferenceOptions();
         setNewReference('');
         handlePopoverClose();
       } else {
