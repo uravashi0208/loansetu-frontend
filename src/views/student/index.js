@@ -101,7 +101,7 @@ const Studentss = () => {
   }, []);
 
   const getAllStudent = async () => {
-    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
+    const userid = userData?.data.role === 'Admin' ? 'admin' : userData?.data._id;
     setLoading(true);
     const response = await GetRequestOnRole('/student/getstudent/', userid);
     if (response.data) {

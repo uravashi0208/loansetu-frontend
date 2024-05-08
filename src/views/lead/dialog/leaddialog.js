@@ -25,7 +25,6 @@ import { useAlert } from 'ui-component/alert/alert';
 import LeadActivity from '../leaddetails/leadActivity';
 
 const LeadDialog = ({ open, handleClose, selectedLead }) => {
-  console.log('selectedLead:', selectedLead);
   const [value, setValue] = useState('1');
   const [leadupdateOpenDialog, setLeadupdateOpenDialog] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);

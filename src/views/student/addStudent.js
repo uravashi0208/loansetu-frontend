@@ -44,6 +44,8 @@ const AddEditStudent = () => {
   const [staff, setStaff] = useState([]);
   const { showAlert, AlertComponent } = useAlert();
   const location = useLocation();
+  const tokenValue = localStorage.getItem('token');
+  const roleData = JSON.parse(tokenValue);
 
   useEffect(() => {
     if (location && location.state !== null) {
@@ -91,7 +93,6 @@ const AddEditStudent = () => {
     }
   };
 
-  
   const handleAddDetail = () => {
     setExaminationDetails([...examinationDetails, { examination: '', passingYear: '', percentage: '', school_name: '' }]);
   };
@@ -131,13 +132,14 @@ const AddEditStudent = () => {
     ssi: studentData.ssi ? studentData.ssi : false,
     professional_tax: studentData.professional_tax ? studentData.professional_tax : false,
     gumastadhara_licence: studentData.gumastadhara_licence ? studentData.gumastadhara_licence : false,
+    bussiness_other: studentData.bussiness_other ? studentData.bussiness_other : false,
+    bussiness_other_name: studentData.bussiness_other_name ? studentData.bussiness_other_name : '',
     bussinessaccountyes: studentData.bussinessaccountyes ? studentData.bussinessaccountyes : false,
     bussinessaccountno: studentData.bussinessaccountno ? studentData.bussinessaccountno : false,
     loanfacilityyes: studentData.loanfacilityyes ? studentData.loanfacilityyes : false,
     loanfacilityno: studentData.loanfacilityno ? studentData.loanfacilityno : false,
     loanamount: studentData.loanamount ? studentData.loanamount : '',
     emi: studentData.emi ? studentData.emi : '',
-    otherearningmember: studentData.otherearningmember ? studentData.otherearningmember : '',
     propertyyes: studentData.propertyyes ? studentData.propertyyes : false,
     propertyno: studentData.propertyno ? studentData.propertyno : false,
     house: studentData.house ? studentData.house : false,
@@ -153,8 +155,38 @@ const AddEditStudent = () => {
     refrenceother: studentData.refrenceother ? studentData.refrenceother : false,
     refrenceothername: studentData.refrenceothername ? studentData.refrenceothername : '',
     agreeconditions: studentData.agreeconditions ? studentData.agreeconditions : false,
-    submit: null
+    other_earning_member_yes: studentData.other_earning_member_yes ? studentData.other_earning_member_yes : false,
+    other_earning_member_no: studentData.other_earning_member_no ? studentData.other_earning_member_no : false,
+    other_earning_member_job: studentData.other_earning_member_job ? studentData.other_earning_member_job : false,
+    other_earning_member_business: studentData.other_earning_member_business ? studentData.other_earning_member_business : false,
+    createdBy: roleData.data._id,
+
+    other_earning_member_monthlySalary: studentData.other_earning_member_monthlySalary
+      ? studentData.other_earning_member_monthlySalary
+      : '',
+    other_earning_member_salaryInCash: studentData.other_earning_member_salaryInCash ? studentData.other_earning_member_salaryInCash : false,
+    other_earning_member_salaryInBank: studentData.other_earning_member_salaryInBank ? studentData.other_earning_member_salaryInBank : false,
+    other_earning_member_designation: studentData.other_earning_member_designation ? studentData.other_earning_member_designation : '',
+    other_earning_member_bussinessline: studentData.other_earning_member_bussinessline ? studentData.other_earning_member_bussinessline : '',
+    other_earning_member_gst: studentData.other_earning_member_gst ? studentData.other_earning_member_gst : false,
+    other_earning_member_ssi: studentData.other_earning_member_ssi ? studentData.other_earning_member_ssi : false,
+    other_earning_member_professional_tax: studentData.other_earning_member_professional_tax ? studentData.other_earning_member_professional_tax : false,
+    other_earning_member_gumastadhara_licence: studentData.other_earning_member_gumastadhara_licence ? studentData.other_earning_member_gumastadhara_licence : false,
+    other_earning_member_bussiness_other: studentData.other_earning_member_bussiness_other ? studentData.other_earning_member_bussiness_other : false,
+    other_earning_member_bussiness_other_name: studentData.other_earning_member_bussiness_other_name ? studentData.other_earning_member_bussiness_other_name : '',
+    other_earning_member_bussinessaccountyes: studentData.other_earning_member_bussinessaccountyes ? studentData.other_earning_member_bussinessaccountyes : false,
+    other_earning_member_bussinessaccountno: studentData.other_earning_member_bussinessaccountno ? studentData.other_earning_member_bussinessaccountno : false
   };
+
+  const generateYearsArray = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let i = 1970; i <= currentYear; i++) {
+      years.push(i);
+    }
+    return years;
+  };
+  const yearsArray = generateYearsArray();
   return (
     <>
       <MainCard title={`${studentData.length === 0 ? 'Add' : 'Edit'} Student`}>
@@ -454,15 +486,23 @@ const AddEditStudent = () => {
                     </Grid>
                     <Grid item xs={12} md={3}>
                       <FormControl fullWidth>
-                        <TextField
+                        <InputLabel outlined>Passing Year</InputLabel>
+                        <Select
                           id={`passingYear_${index}`}
                           value={element.passingYear}
-                          name={`passingYear`}
-                          onChange={(e) => handleChangeDetail(index, e)}
                           label="Passing Year"
-                          variant="outlined"
-                          type="text"
-                        />
+                          onChange={(e) => handleChangeDetail(index, e)}
+                          name={`passingYear`}
+                        >
+                          <MenuItem value="" disabled>
+                            <em>None</em>
+                          </MenuItem>
+                          {yearsArray.map((year, index) => (
+                            <MenuItem key={index} value={year}>
+                              {year}
+                            </MenuItem>
+                          ))}
+                        </Select>
                       </FormControl>
                     </Grid>
                     <Grid item xs={12} md={3}>
@@ -662,6 +702,7 @@ const AddEditStudent = () => {
                             variant="outlined"
                             margin="normal"
                             fullWidth
+                            placeholder="Ex. Diamond,Textile etc."
                           />
                           <FormLabel component="legend">Any Bussiness proof form below</FormLabel>
                           <FormControlLabel
@@ -671,7 +712,7 @@ const AddEditStudent = () => {
                                 onChange={handleChange}
                                 name="gst"
                                 color="primary"
-                                disabled={values.ssi || values.gumastadhara_licence || values.professional_tax}
+                                disabled={values.ssi || values.gumastadhara_licence || values.professional_tax || values.bussiness_other}
                               />
                             }
                             label="GST"
@@ -683,7 +724,7 @@ const AddEditStudent = () => {
                                 onChange={handleChange}
                                 name="ssi"
                                 color="primary"
-                                disabled={values.gst || values.gumastadhara_licence || values.professional_tax}
+                                disabled={values.gst || values.gumastadhara_licence || values.professional_tax || values.bussiness_other}
                               />
                             }
                             label="SSI"
@@ -695,7 +736,7 @@ const AddEditStudent = () => {
                                 onChange={handleChange}
                                 name="professional_tax"
                                 color="primary"
-                                disabled={values.gst || values.gumastadhara_licence || values.ssi}
+                                disabled={values.gst || values.gumastadhara_licence || values.ssi || values.bussiness_other}
                               />
                             }
                             label="Professional Tax"
@@ -707,11 +748,35 @@ const AddEditStudent = () => {
                                 onChange={handleChange}
                                 name="gumastadhara_licence"
                                 color="primary"
-                                disabled={values.gst || values.professional_tax || values.ssi}
+                                disabled={values.gst || values.professional_tax || values.ssi || values.bussiness_other}
                               />
                             }
                             label="Gumastadhara Licence"
                           />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.bussiness_other || false}
+                                onChange={handleChange}
+                                name="bussiness_other"
+                                color="primary"
+                                disabled={values.gst || values.professional_tax || values.ssi || values.gumastadhara_licence}
+                              />
+                            }
+                            label="Other"
+                          />
+                          {values.bussiness_other && (
+                            <TextField
+                              type="text"
+                              id="bussiness_other_name"
+                              name="bussiness_other_name"
+                              label="Other Proof"
+                              value={values.bussiness_other_name}
+                              onChange={handleChange}
+                              variant="outlined"
+                              margin="normal"
+                            />
+                          )}
                           <FormLabel component="legend">Business has Current A/C?</FormLabel>
                           <FormControlLabel
                             control={
@@ -779,10 +844,11 @@ const AddEditStudent = () => {
                           <Grid container spacing={gridSpacing}>
                             <Grid item xs={12} md={6}>
                               <TextField
-                                type="number"
+                                type="text"
                                 id="loanamount"
                                 name="loanamount"
                                 label="Loan Amount"
+                                min={0}
                                 value={values.loanamount}
                                 onChange={handleChange}
                                 variant="outlined"
@@ -807,19 +873,264 @@ const AddEditStudent = () => {
                         ''
                       )}
                     </Grid>
-                    <Grid item xs={12} md={6}>
-                      <FormControl fullWidth>
-                        <TextField
-                          id="outlined-adornment-otherearningmember-login"
-                          type="text"
-                          value={values.otherearningmember}
-                          name="otherearningmember"
-                          onBlur={handleBlur}
-                          onChange={handleChange}
-                          label="Any Other earning member in family?"
-                          variant="outlined" // Add this line
-                        />
-                      </FormControl>
+                  </Grid>
+                </Grid>
+
+                <Grid item xs={12} mb={2}>
+                  <Grid container spacing={gridSpacing}>
+                    <Grid item xs={12} md={4}>
+                      <FormLabel component="legend">Any Other earning member in family?</FormLabel>
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={values.other_earning_member_yes || false}
+                            onChange={handleChange}
+                            name="other_earning_member_yes"
+                            color="primary"
+                            disabled={values.other_earning_member_no}
+                          />
+                        }
+                        label="Yes"
+                      />
+                      <FormControlLabel
+                        control={
+                          <Checkbox
+                            checked={values.other_earning_member_no || false}
+                            onChange={handleChange}
+                            name="other_earning_member_no"
+                            color="primary"
+                            disabled={values.other_earning_member_yes}
+                          />
+                        }
+                        label="No"
+                      />
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                      {values.other_earning_member_yes && (
+                        <>
+                          <Grid container spacing={gridSpacing}>
+                            <Grid item xs={12} md={3}>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={values.other_earning_member_job || false}
+                                    onChange={handleChange}
+                                    name="other_earning_member_job"
+                                    color="primary"
+                                    disabled={values.other_earning_member_business}
+                                  />
+                                }
+                                label="Job"
+                              />
+                            </Grid>
+                            <Grid item xs={12} md={3}>
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={values.other_earning_member_business || false}
+                                    onChange={handleChange}
+                                    name="other_earning_member_business"
+                                    color="primary"
+                                    disabled={values.other_earning_member_job}
+                                  />
+                                }
+                                label="Business"
+                              />
+                            </Grid>
+                          </Grid>
+                        </>
+                      )}
+                    </Grid>
+                    <Grid item xs={12} md={4}>
+                      {values.other_earning_member_job ? (
+                        <>
+                          <TextField
+                            type="number"
+                            id="other_earning_member_monthlySalary"
+                            name="other_earning_member_monthlySalary"
+                            label="Monthly Salary"
+                            value={values.other_earning_member_monthlySalary}
+                            onChange={handleChange}
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_salaryInCash || false}
+                                onChange={handleChange}
+                                name="other_earning_member_salaryInCash"
+                                color="primary"
+                                disabled={values.other_earning_member_salaryInBank}
+                              />
+                            }
+                            label="Salary in Cash"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_salaryInBank || false}
+                                onChange={handleChange}
+                                name="other_earning_member_salaryInBank"
+                                color="primary"
+                                disabled={values.other_earning_member_salaryInCash}
+                              />
+                            }
+                            label="Salary in Bank"
+                          />
+                          <TextField
+                            id="other_earning_member_designation"
+                            name="other_earning_member_designation"
+                            label="Designation"
+                            value={values.other_earning_member_designation}
+                            onChange={handleChange}
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                          />
+                        </>
+                      ) : values.other_earning_member_business ? (
+                        <>
+                          <TextField
+                            type="text"
+                            id="other_earning_member_bussinessline"
+                            name="other_earning_member_bussinessline"
+                            label="Line of Bussiness"
+                            value={values.other_earning_member_bussinessline}
+                            onChange={handleChange}
+                            variant="outlined"
+                            margin="normal"
+                            fullWidth
+                            placeholder="Ex. Diamond,Textile etc."
+                          />
+                          <FormLabel component="legend">Any Bussiness proof form below</FormLabel>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_gst || false}
+                                onChange={handleChange}
+                                name="other_earning_member_gst"
+                                color="primary"
+                                disabled={
+                                  values.other_earning_member_ssi ||
+                                  values.other_earning_member_gumastadhara_licence ||
+                                  values.other_earning_member_professional_tax ||
+                                  values.other_earning_member_bussiness_other
+                                }
+                              />
+                            }
+                            label="GST"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_ssi || false}
+                                onChange={handleChange}
+                                name="other_earning_member_ssi"
+                                color="primary"
+                                disabled={
+                                  values.other_earning_member_gst ||
+                                  values.other_earning_member_gumastadhara_licence ||
+                                  values.other_earning_member_professional_tax ||
+                                  values.other_earning_member_bussiness_other
+                                }
+                              />
+                            }
+                            label="SSI"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_professional_tax || false}
+                                onChange={handleChange}
+                                name="other_earning_member_professional_tax"
+                                color="primary"
+                                disabled={
+                                  values.other_earning_member_gst ||
+                                  values.other_earning_member_gumastadhara_licence ||
+                                  values.other_earning_member_ssi ||
+                                  values.other_earning_member_bussiness_other
+                                }
+                              />
+                            }
+                            label="Professional Tax"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_gumastadhara_licence || false}
+                                onChange={handleChange}
+                                name="other_earning_member_gumastadhara_licence"
+                                color="primary"
+                                disabled={
+                                  values.other_earning_member_gst ||
+                                  values.other_earning_member_professional_tax ||
+                                  values.other_earning_member_ssi ||
+                                  values.other_earning_member_bussiness_other
+                                }
+                              />
+                            }
+                            label="Gumastadhara Licence"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_bussiness_other || false}
+                                onChange={handleChange}
+                                name="other_earning_member_bussiness_other"
+                                color="primary"
+                                disabled={
+                                  values.other_earning_member_gst ||
+                                  values.other_earning_member_professional_tax ||
+                                  values.other_earning_member_ssi ||
+                                  values.other_earning_member_gumastadhara_licence
+                                }
+                              />
+                            }
+                            label="Other"
+                          />
+                          {values.other_earning_member_bussiness_other && (
+                            <TextField
+                              type="text"
+                              id="other_earning_member_bussiness_other_name"
+                              name="other_earning_member_bussiness_other_name"
+                              label="Other Proof"
+                              value={values.other_earning_member_bussiness_other_name}
+                              onChange={handleChange}
+                              variant="outlined"
+                              margin="normal"
+                            />
+                          )}
+                          <FormLabel component="legend">Business has Current A/C?</FormLabel>
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_bussinessaccountyes || false}
+                                onChange={handleChange}
+                                name="other_earning_member_bussinessaccountyes"
+                                color="primary"
+                                disabled={values.other_earning_member_bussinessaccountno}
+                              />
+                            }
+                            label="Yes"
+                          />
+                          <FormControlLabel
+                            control={
+                              <Checkbox
+                                checked={values.other_earning_member_bussinessaccountno || false}
+                                onChange={handleChange}
+                                name="other_earning_member_bussinessaccountno"
+                                color="primary"
+                                disabled={values.other_earning_member_bussinessaccountyes}
+                              />
+                            }
+                            label="No"
+                          />
+                        </>
+                      ) : (
+                        ''
+                      )}
                     </Grid>
                   </Grid>
                 </Grid>

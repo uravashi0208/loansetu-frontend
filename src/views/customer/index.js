@@ -106,20 +106,22 @@ const Customer = () => {
   }, []);
 
   const getAllCustomer = async () => {
-    const userid =
-      userData.data.role === 'Admin'
-        ? 'admin'
-        : userData.data.staff_team === 'service'
-          ? `service-${userData.data._id}`
-          : userData.data._id;
-    setLoading(true);
-    const response = await GetRequestOnRole('/customer/getallcustomer/', userid);
-    if (response.data) {
-      const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.user_status }));
-      setStaffData(modifiedData);
-      setLoading(false);
-    } else {
-      setLoading(false);
+    if (userData) {
+      const userid =
+        userData.data.role === 'Admin'
+          ? 'admin'
+          : userData.data.staff_team === 'service'
+            ? `service-${userData.data._id}`
+            : userData.data._id;
+      setLoading(true);
+      const response = await GetRequestOnRole('/customer/getallcustomer/', userid);
+      if (response.data) {
+        const modifiedData = response.data.map((row, index) => ({ ...row, id: index, status: row.user_status }));
+        setStaffData(modifiedData);
+        setLoading(false);
+      } else {
+        setLoading(false);
+      }
     }
   };
 

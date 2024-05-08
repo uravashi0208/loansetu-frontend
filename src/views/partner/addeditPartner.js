@@ -49,6 +49,7 @@ const AddEditPartner = () => {
     bank_name: PartnerData.bank_name ? PartnerData.bank_name : '',
     branch_name: PartnerData.branch_name ? PartnerData.branch_name : '',
     account_number: PartnerData.account_number ? PartnerData.account_number : '',
+    bank_ifsc_code: PartnerData.bank_ifsc_code ? PartnerData.bank_ifsc_code : '',
     password: ''
   };
   return (
@@ -405,7 +406,7 @@ const AddEditPartner = () => {
                 </Typography>
                 <Grid item xs={12} mb={2}>
                   <Grid container spacing={gridSpacing}>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3}>
                       <FormControl fullWidth>
                         <TextField
                           id="outlined-adornment-bank_name"
@@ -419,7 +420,7 @@ const AddEditPartner = () => {
                         />
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3}>
                       <FormControl fullWidth>
                         <TextField
                           id="outlined-adornment-branch_name"
@@ -433,7 +434,7 @@ const AddEditPartner = () => {
                         />
                       </FormControl>
                     </Grid>
-                    <Grid item xs={12} md={4}>
+                    <Grid item xs={12} md={3}>
                       <FormControl>
                         <TextField
                           id="outlined-adornment-account_number"
@@ -443,6 +444,20 @@ const AddEditPartner = () => {
                           onBlur={handleBlur}
                           onChange={handleChange}
                           label="Account Number"
+                          variant="outlined" // Add this line
+                        />
+                      </FormControl>
+                    </Grid>
+                    <Grid item xs={12} md={3}>
+                      <FormControl>
+                        <TextField
+                          id="outlined-adornment-bank_ifsc_code"
+                          type="text"
+                          value={values.bank_ifsc_code}
+                          name="bank_ifsc_code"
+                          onBlur={handleBlur}
+                          onChange={handleChange}
+                          label="IFSC Code"
                           variant="outlined" // Add this line
                         />
                       </FormControl>

@@ -101,7 +101,8 @@ const NotificationSection = () => {
   };
 
   const getAllNotification = async () => {
-    const userid = userData.data?.role === 'Admin' ? 'admin' : userData.data?._id;
+    // if (userData) {
+    const userid = userData?.data?.role === 'Admin' ? 'admin' : userData?.data?._id;
     const response = await GetRequestOnRole('/notification/getnotification/', userid);
     if (response.data) {
       const modifiedData = response.data.map((row, index) => ({ ...row, id: index }));
@@ -111,6 +112,7 @@ const NotificationSection = () => {
       const hasNew = response.data.some((notification) => !notification.isRead);
       setHasNewNotification(hasNew);
     }
+    // }
   };
 
   useEffect(() => {

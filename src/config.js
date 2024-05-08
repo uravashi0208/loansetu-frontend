@@ -5,8 +5,8 @@ const config = {
   defaultPath: '/',
   fontFamily: `'Roboto', sans-serif`,
   borderRadius: 12,
-  // backendUrl: 'http://localhost:8000/api'
-  backendUrl: 'https://loansetu-backend-1.onrender.com/api'
+  backendUrl: 'http://localhost:8000/api'
+  // backendUrl: 'https://loansetu-backend-1.onrender.com/api'
 };
 
 export default config;

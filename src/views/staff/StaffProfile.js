@@ -27,7 +27,7 @@ import { gridSpacing } from 'store/constant';
 import MainCard from 'ui-component/cards/MainCard';
 import { IconUpload } from '@tabler/icons-react';
 import GetRequest from 'commonRequest/getRequest';
-import { useLocation, useNavigate } from 'react-router';
+import { useNavigate } from 'react-router';
 import { useAlert } from 'ui-component/alert/alert';
 import PostRequest from 'commonRequest/postRequest';
 
@@ -45,13 +45,9 @@ const StaffProfile = () => {
   const [selectedContractPdf, setSelectedContractPdf] = useState(null);
   const [loading, setLoading] = useState(false);
   const { showAlert, AlertComponent } = useAlert();
-  const location = useLocation();
 
   useEffect(() => {
     getAllBranchLocation();
-    if (location && location.state !== null) {
-      getStaffById(location.state);
-    }
   }, []);
 
   const getAllBranchLocation = async () => {

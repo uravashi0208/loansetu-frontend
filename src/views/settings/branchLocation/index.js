@@ -25,22 +25,29 @@ const BranchLocation = () => {
     {
       field: 'location_name',
       headerName: 'Location name',
-      width: 300,
+      width: 270,
       sortable: false,
       valueGetter: (params) => `${params.row.location_name || ''}`
     },
     {
       field: 'branch_city',
       headerName: 'City',
-      width: 200,
+      width: 180,
       sortable: false,
       valueGetter: (params) => `${params.row.branch_city || ''}`
+    },
+    {
+      field: 'branch_pincode',
+      headerName: 'Pincode',
+      width: 100,
+      sortable: false,
+      valueGetter: (params) => `${params.row.branch_pincode || ''}`
     },
     { field: 'status', headerName: 'Status', width: 100 },
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 200,
+      width: 150,
       sortable: false,
       renderCell: (params) => (
         <>

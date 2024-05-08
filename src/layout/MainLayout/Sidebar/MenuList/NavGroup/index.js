@@ -22,11 +22,13 @@ const NavGroup = ({ item }) => {
   }, []);
 
   const getStaffPermissionById = async () => {
-    const response = await GetByIdRequest('/staff/getstaffpermissionbyid/', roleData.data?._id);
-    if (response.response === true) {
-      const permissionsData = response.data.permissions;
-      setPermissions(permissionsData);
-    }
+    if (roleData) {
+      const response = await GetByIdRequest('/staff/getstaffpermissionbyid/', roleData.data?._id);
+      if (response.response === true) {
+        const permissionsData = response.data.permissions;
+        setPermissions(permissionsData);
+      }
+  }
   };
 
   // menu list collapse & items
