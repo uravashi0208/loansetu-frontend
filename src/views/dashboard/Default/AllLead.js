@@ -9,11 +9,14 @@ import MainCard from 'ui-component/cards/MainCard';
 import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
-import TableChartOutlinedIcon from '@mui/icons-material/TableChartOutlined';
+import PersonAddOutlinedIcon from '@mui/icons-material/PersonAddOutlined';
+import GetRequestOnRole from 'commonRequest/getRequestRole';
+import { useEffect, useState } from 'react';
 
-// styles
+// assets
+
 const CardWrapper = styled(MainCard)(({ theme }) => ({
-  backgroundColor: theme.palette.primary.dark,
+  backgroundColor: 'rgb(103, 58, 183)',
   color: theme.palette.primary.light,
   overflow: 'hidden',
   position: 'relative',
@@ -39,10 +42,26 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
   }
 }));
 
-// ==============================|| DASHBOARD - TOTAL INCOME DARK CARD ||============================== //
+// ===========================|| DASHBOARD DEFAULT - EARNING CARD ||=========================== //
 
-const TotalIncomeDarkCard = ({ isLoading }) => {
+const TotalAllLead = ({ isLoading }) => {
   const theme = useTheme();
+  const tokenValue = localStorage.getItem('token');
+  const userData = JSON.parse(tokenValue);
+  const [allLeadCount, setAllLeadCount] = useState([]);
+  useEffect(() => {
+    getAllLeadCount();
+  }, []);
+
+  const getAllLeadCount = async () => {
+    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
+    const response = await GetRequestOnRole('/dashboardreport/getAllLeadReport/', userid);
+    if (response.response === true) {
+      setAllLeadCount(response.totalLeads);
+    } else {
+      setAllLeadCount(0);
+    }
+  };
 
   return (
     <>
@@ -59,11 +78,11 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                     sx={{
                       ...theme.typography.commonAvatar,
                       ...theme.typography.largeAvatar,
-                      backgroundColor: theme.palette.primary[800],
-                      color: '#fff'
+                      backgroundColor: 'rgb(83 57 131)',
+                      color: 'rgb(255 255 255)'
                     }}
                   >
-                    <TableChartOutlinedIcon fontSize="inherit" />
+                    <PersonAddOutlinedIcon fontSize="inherit" />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -74,12 +93,12 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
                   }}
                   primary={
                     <Typography variant="h4" sx={{ color: '#fff' }}>
-                      $203k
+                      {allLeadCount}
                     </Typography>
                   }
                   secondary={
                     <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
-                      Total Income
+                      Total Lead
                     </Typography>
                   }
                 />
@@ -92,8 +111,8 @@ const TotalIncomeDarkCard = ({ isLoading }) => {
   );
 };
 
-TotalIncomeDarkCard.propTypes = {
+TotalAllLead.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default TotalIncomeDarkCard;
+export default TotalAllLead;

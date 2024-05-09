@@ -9,18 +9,22 @@ import MainCard from 'ui-component/cards/MainCard';
 import TotalIncomeCard from 'ui-component/cards/Skeleton/TotalIncomeCard';
 
 // assets
-import StorefrontTwoToneIcon from '@mui/icons-material/StorefrontTwoTone';
+import CancelIcon from '@mui/icons-material/Cancel';
+import { useEffect, useState } from 'react';
+import GetRequestOnRole from 'commonRequest/getRequestRole';
 
 // styles
 const CardWrapper = styled(MainCard)(({ theme }) => ({
   overflow: 'hidden',
   position: 'relative',
+  backgroundColor: 'rgb(244, 67, 54)',
+  color: theme.palette.primary.light,
   '&:after': {
     content: '""',
     position: 'absolute',
     width: 210,
     height: 210,
-    background: `linear-gradient(210.04deg, ${theme.palette.warning.dark} -50.94%, rgba(144, 202, 249, 0) 83.49%)`,
+    background: `linear-gradient(210.04deg, #894641 -50.94%, rgba(144, 202, 249, 0) 83.49%)`,
     borderRadius: '50%',
     top: -30,
     right: -180
@@ -30,7 +34,7 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
     position: 'absolute',
     width: 210,
     height: 210,
-    background: `linear-gradient(140.9deg, ${theme.palette.warning.dark} -14.02%, rgba(144, 202, 249, 0) 70.50%)`,
+    background: `linear-gradient(140.9deg, #ffdbd9 -14.02%, rgba(144, 202, 249, 0) 77.58%)`,
     borderRadius: '50%',
     top: -160,
     right: -130
@@ -39,8 +43,25 @@ const CardWrapper = styled(MainCard)(({ theme }) => ({
 
 // ==============================|| DASHBOARD - TOTAL INCOME LIGHT CARD ||============================== //
 
-const TotalIncomeLightCard = ({ isLoading }) => {
+const TotalCancelLead = ({ isLoading }) => {
   const theme = useTheme();
+
+  const tokenValue = localStorage.getItem('token');
+  const userData = JSON.parse(tokenValue);
+  const [allLeadCount, setAllLeadCount] = useState([]);
+  useEffect(() => {
+    getAllLeadCount();
+  }, []);
+
+  const getAllLeadCount = async () => {
+    const userid = userData.data.role === 'Admin' ? 'admin' : userData.data._id;
+    const response = await GetRequestOnRole('/dashboardreport/getAllCancelLeadReport/', userid);
+    if (response.response === true) {
+      setAllLeadCount(response.totalLeads);
+    } else {
+      setAllLeadCount(0);
+    }
+  };
 
   return (
     <>
@@ -57,11 +78,11 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                     sx={{
                       ...theme.typography.commonAvatar,
                       ...theme.typography.largeAvatar,
-                      backgroundColor: theme.palette.warning.light,
-                      color: theme.palette.warning.dark
+                      backgroundColor: '#ff6a5f',
+                      color: '#fff'
                     }}
                   >
-                    <StorefrontTwoToneIcon fontSize="inherit" />
+                    <CancelIcon fontSize="inherit" />
                   </Avatar>
                 </ListItemAvatar>
                 <ListItemText
@@ -70,16 +91,14 @@ const TotalIncomeLightCard = ({ isLoading }) => {
                     mt: 0.45,
                     mb: 0.45
                   }}
-                  primary={<Typography variant="h4">$203k</Typography>}
+                  primary={
+                    <Typography variant="h4" sx={{ color: '#fff' }}>
+                      {allLeadCount}
+                    </Typography>
+                  }
                   secondary={
-                    <Typography
-                      variant="subtitle2"
-                      sx={{
-                        color: theme.palette.grey[500],
-                        mt: 0.5
-                      }}
-                    >
-                      Total Income
+                    <Typography variant="subtitle2" sx={{ color: 'primary.light', mt: 0.25 }}>
+                      Total Cancel Lead
                     </Typography>
                   }
                 />
@@ -92,8 +111,8 @@ const TotalIncomeLightCard = ({ isLoading }) => {
   );
 };
 
-TotalIncomeLightCard.propTypes = {
+TotalCancelLead.propTypes = {
   isLoading: PropTypes.bool
 };
 
-export default TotalIncomeLightCard;
+export default TotalCancelLead;

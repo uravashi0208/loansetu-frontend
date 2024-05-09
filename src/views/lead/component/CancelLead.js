@@ -27,7 +27,35 @@ const CancelLead = ({ userData }) => {
       sortable: false,
       valueGetter: (params) => `${params.row.student_name || ''}`
     },
-    { field: 'phone', headerName: 'Phone Number', width: 130 },
+    {
+      field: 'phone',
+      headerName: 'Phone Number',
+      width: 130,
+      renderCell: (params) => {
+        const phoneNumber = params.value;
+        const redirectToWhatsApp = () => {
+          window.open(`https://wa.me/${phoneNumber}`);
+        };
+
+        const handleClick = (event) => {
+          if (event.type === 'click' || event.key === 'Enter') {
+            redirectToWhatsApp();
+          }
+        };
+
+        return (
+          <div
+            role="button"
+            tabIndex={0}
+            style={{ cursor: 'pointer', textDecoration: 'underline' }}
+            onClick={handleClick}
+            onKeyPress={handleClick}
+          >
+            {phoneNumber}
+          </div>
+        );
+      }
+    },
     {
       field: 'userDetails.user_name || userDetails.company_name',
       headerName: 'Created By',
